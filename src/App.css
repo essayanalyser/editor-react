@@ -30,7 +30,8 @@
   font-size: 0.75rem;
 }
 
-.Editor{
-  display:inline;
-  width: 50%;
+.row{
+  display: flex;
+  flex-grow: 8;
 }
+

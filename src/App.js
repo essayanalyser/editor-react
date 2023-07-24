@@ -4,7 +4,10 @@ import Editor from "./Editor"
 
 function App() {
   return (
-    <Editor/>
+    <div className='row'>
+      <Editor/>
+    </div>
+
   );
 }
 
