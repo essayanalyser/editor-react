@@ -1,0 +1,12 @@
+#home {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.editor {
+    width: 60%;
+}
+
+.statistics {
+    width: 40%;
+}
