@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import {Button} from 'reactstrap';
@@ -6,6 +6,22 @@ import axios from 'axios';
 
 export default function Editor() {
     const [typedData, setTypedData] = useState('');
+    useEffect(()=>{
+        getAllPara()
+    })
+    const getAllPara = ()=>{
+        let data;
+        axios
+            .get("http://localhost:8000/api/users/")
+            .then((res) => {
+                data = res.data;
+                console.log(data)
+                this.setState({
+                    details: data,
+                });
+            })
+            .catch((err) => {});
+    }
     function handleSubmit(e) {
         e.preventDefault();
   
