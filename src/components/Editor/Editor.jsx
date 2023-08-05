@@ -12,7 +12,7 @@ export default function Editor() {
     const getAllPara = ()=>{
         let data;
         axios
-            .get("http://localhost:8000/api/users/")
+            .get("http://localhost:8000/api/users")
             .then((res) => {
                 data = res.data;
                 console.log(data)
