@@ -8,7 +8,7 @@ export default function Editor() {
     const [typedData, setTypedData] = useState('');
     useEffect(()=>{
         getAllPara()
-    })
+    },[])
     const getAllPara = ()=>{
         let data;
         axios
@@ -28,9 +28,10 @@ export default function Editor() {
         axios
             .post("http://localhost:8000/api/users/", {
                 title: 'Its me ',
-                content: this.data,
+                content: typedData,
             })
             .then((res) => {
+                console.log(res.data)
                 this.setState({
                     title: "",
                     content: "",
@@ -50,8 +51,8 @@ export default function Editor() {
                 }}
 
                 onChange={(event, editor) => {
-                    const data = editor.getData();
-                    setTypedData(data)
+                    const sendData = editor.getData();
+                    setTypedData(sendData)
                 }}
 
                 config={{ placeholder: "Start typing..." }}
