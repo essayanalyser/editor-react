@@ -1,63 +1,52 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import {Button} from 'reactstrap';
-import axios from 'axios';
 
-export default function Editor() {
+import "./../../stylesheets/editor.css"
+import { Link, useNavigate } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUser } from '@fortawesome/free-solid-svg-icons';
+
+export default function Editor({ handleAnalyseButtonClicked, authUser }) {
+    const navigate = useNavigate()
     const [typedData, setTypedData] = useState('');
-    useEffect(()=>{
-        getAllPara()
-    },[])
-    const getAllPara = ()=>{
-        let data;
-        axios
-            .get("http://localhost:8000/api/users/")
-            .then((res) => {
-                data = res.data;
-                console.log(data)
-                this.setState({
-                    details: data,
-                });
-            })
-            .catch((err) => {});
-    }
-    function handleSubmit(e) {
-        e.preventDefault();
-  
-        axios
-            .post("http://localhost:8000/api/users/", {
-                title: 'Its me ',
-                content: typedData,
-            })
-            .then((res) => {
-                console.log(res.data)
-                this.setState({
-                    title: "",
-                    content: "",
-                });
-            })
-            .catch((err) => {});
-    };
+
     return (
         <div className="editor">
-            <h2>Welcome to the site !</h2>
-            <CKEditor
-                editor={ClassicEditor}
-                data={typedData}
+            <div className="titleWrapper">
+                <h2>Analyser</h2>
+                <div className="authSection">
+                    {
+                        (JSON.parse(localStorage.getItem('isLoggedIn')) || authUser) ?
+                        <div className="userInfo" title={authUser.displayName} onClick={()=>navigate('/auth')}>
+                            <FontAwesomeIcon icon={faUser} />
+                        </div>
+                            :
+                            <>
+                                <Link to='/auth/login'>Login</Link>
+                                <Link to='/auth/signup'>Signup</Link>
+                            </>
+                    }
+                </div>
+            </div>
 
-                onReady={editor => {
-                    console.log('Editor is ready to use!', editor);
-                }}
+            <div className="editorWrapper">
+                <CKEditor
+                    editor={ClassicEditor}
+                    data={typedData}
 
-                onChange={(event, editor) => {
-                    const sendData = editor.getData();
-                    setTypedData(sendData)
-                }}
+                    onChange={(event, editor) => {
+                        const data = editor.getData();
+                        setTypedData(data)
+                    }}
 
-                config={{ placeholder: "Start typing..." }}
-            />
-            <Button color='info' onClick={handleSubmit}>Submit</Button>
+                    config={{ placeholder: "Start typing..." }}
+                />
+                <div className="submitButtonWrapper">
+                    <button className='application-button' onClick={() => handleAnalyseButtonClicked(typedData)}>Analyse</button>
+                </div>
+            </div>
+
         </div>
     );
 
