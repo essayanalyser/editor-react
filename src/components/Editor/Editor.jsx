@@ -18,7 +18,7 @@ export default function Editor({ handleAnalyseButtonClicked, authUser }) {
                 <div className="authSection">
                     {
                         (JSON.parse(localStorage.getItem('isLoggedIn')) || authUser) ?
-                        <div className="userInfo" title={authUser.displayName} onClick={()=>navigate('/auth')}>
+                        <div className="userInfo" title={authUser?.displayName} onClick={()=>navigate('/auth')}>
                             <FontAwesomeIcon icon={faUser} />
                         </div>
                             :
