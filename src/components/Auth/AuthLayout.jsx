@@ -15,6 +15,22 @@ const AuthLayout = () => {
 			else {
 				navigate('signup');
 			}
+
+			return;
+		}
+
+		if (JSON.parse(localStorage.getItem('isLoggedIn'))) {
+			if (
+				(window.location.pathname === '/auth/login') ||
+				(window.location.pathname === '/auth/signup') ||
+				(window.location.pathname === '/auth/reset')
+			) {
+				navigate('/auth')
+			}
+		}
+
+		else if (window.location.pathname === '/auth/user') {
+			navigate('/auth')
 		}
 	})
 
@@ -23,7 +39,7 @@ const AuthLayout = () => {
 			<Link to='/'>
 				<button className='back-button application-button'>Go back</button>
 			</Link>
-			
+
 			<Outlet />
 		</div>
 	)

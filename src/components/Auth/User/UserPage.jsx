@@ -1,5 +1,5 @@
 import { signOut } from 'firebase/auth'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { auth } from './../../../config/Firebase'
 
@@ -7,12 +7,6 @@ const User = ({ authUser }) => {
     const navigate = useNavigate()
 
     const [message, setMessage] = useState()
-
-    useEffect(() => {
-        if (!JSON.parse(localStorage.getItem('isLoggedIn'))) {
-            navigate('/')
-        }
-    })
 
     const handleLogout = () => {
         signOut(auth).then(() => {
