@@ -10,7 +10,7 @@ import { faUser } from '@fortawesome/free-solid-svg-icons';
 export default function Editor({ handleAnalyseButtonClicked, authUser }) {
     const navigate = useNavigate()
     const [typedData, setTypedData] = useState('');
-
+    
     return (
         <div className="editor">
             <div className="titleWrapper">
@@ -20,6 +20,7 @@ export default function Editor({ handleAnalyseButtonClicked, authUser }) {
                         (JSON.parse(localStorage.getItem('isLoggedIn')) || authUser) ?
                         <div className="userInfo" title={authUser?.displayName} onClick={()=>navigate('/auth')}>
                             <FontAwesomeIcon icon={faUser} />
+                            
                         </div>
                             :
                             <>
@@ -34,7 +35,7 @@ export default function Editor({ handleAnalyseButtonClicked, authUser }) {
                 <CKEditor
                     editor={ClassicEditor}
                     data={typedData}
-
+                    
                     onChange={(event, editor) => {
                         const data = editor.getData();
                         setTypedData(data)

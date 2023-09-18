@@ -5,6 +5,7 @@ import "./stylesheets/home.css";
 import { Route as Link, Routes, useNavigate } from "react-router-dom";
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from './config/Firebase';
+import axios from 'axios';
 
 function App() {
 	const navigate = useNavigate();
@@ -15,7 +16,18 @@ function App() {
 		if (!authUser) {
 			navigate('/auth')
 		} else {
-			// fetchFromBackEnd(typedData);
+			// post data to backend
+			console.log(authUser)
+			// preventDefault();
+			axios
+			 .post("http://localhost:8000/api/users/", {
+				title:authUser.email,
+				content: typedData,
+			 })
+			 .then((res)=>{
+				console.log(res.data);
+			 })
+			 .catch((err)=>{})
 		}
 	}
 
