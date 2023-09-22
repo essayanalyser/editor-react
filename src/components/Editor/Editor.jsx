@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
@@ -6,10 +6,23 @@ import "./../../stylesheets/editor.css"
 import { Link, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
+import axios from "axios";
 
 export default function Editor({ handleAnalyseButtonClicked, authUser }) {
     const navigate = useNavigate()
     const [typedData, setTypedData] = useState('');
+    useEffect(()=>{
+        // Get data if authenticated
+        if(authUser){
+            axios
+			 .get(`http://localhost:8000/api/users/${authUser.email}/`)
+			 .then((res)=>{
+				let gotData = res.data.content;
+                console.log(res.data);
+			 })
+			 .catch((err)=>{})
+        }
+    })
     
     return (
         <div className="editor">
@@ -41,7 +54,7 @@ export default function Editor({ handleAnalyseButtonClicked, authUser }) {
                         setTypedData(data)
                     }}
 
-                    config={{ placeholder: "Start typing..." }}
+                    config={{ placeholder: "Start Typing..." }}
                 />
                 <div className="submitButtonWrapper">
                     <button className='application-button' onClick={() => handleAnalyseButtonClicked(typedData)}>Analyse</button>
