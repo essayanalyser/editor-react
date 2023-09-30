@@ -47,23 +47,28 @@ function App() {
 
 
 	return (
-		<Routes>
-			<Link path="/" element={
-				<div id="home">
-					<Editor handleAnalyseButtonClicked={handleAnalyseButtonClicked} authUser={authUser} />
-					<Statistics />
-				</div>
-			} />
+    <Routes>
+      <Link
+        path="/"
+        element={
+          <div id="home">
+            <Editor
+              handleAnalyseButtonClicked={handleAnalyseButtonClicked}
+              authUser={authUser}
+            />
+            <Statistics authUser={authUser} />
+          </div>
+        }
+      />
 
-			<Link exact path='auth' 		element={<AuthLayout authUser={authUser} />}>
-				<Link 		path='login' 	element={<Login />} />
-				<Link 		path='signup' 	element={<Signup />} />
-				<Link 		path='user' 	element={<UserPage authUser={authUser} />} />
-				<Link 		path='reset' 	element={<ResetPass />} />
-			</Link>
-
-		</Routes>
-	);
+      <Link exact path="auth" element={<AuthLayout authUser={authUser} />}>
+        <Link path="login" element={<Login />} />
+        <Link path="signup" element={<Signup />} />
+        <Link path="user" element={<UserPage authUser={authUser} />} />
+        <Link path="reset" element={<ResetPass />} />
+      </Link>
+    </Routes>
+  );
 }
 
 export default App;
