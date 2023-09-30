@@ -121,7 +121,7 @@ const Statistics = ({ authUser }) => {
 
   useEffect(() => {
     getData();
-  }, []);
+  }, [authUser]);
 
   return (
     <div className="statistics">
