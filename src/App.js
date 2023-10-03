@@ -5,6 +5,7 @@ import "./stylesheets/home.css";
 import { Route as Link, Routes, useNavigate } from "react-router-dom";
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from './config/Firebase';
+import { version } from './components/Editor/Editor.jsx'
 import axios from 'axios';
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
 			axios
 			 .post("http://localhost:8000/api/users/", {
 				title:authUser.email,
+				version:version+1,
 				content: typedData,
 			 })
 			 .then((res)=>{

@@ -7,7 +7,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
 import axios from "axios";
-
+let version = -1
 export default function Editor({ handleAnalyseButtonClicked, authUser }) {
     const navigate = useNavigate()
     const [typedData, setTypedData] = useState('');
@@ -17,8 +17,8 @@ export default function Editor({ handleAnalyseButtonClicked, authUser }) {
             axios
 			 .get(`http://localhost:8000/api/users/${authUser.email}/`)
 			 .then((res)=>{
-				let gotData = res.data.content;
-                console.log(res.data);
+				version = res.data[0];
+                console.log(res.data[0]);
 			 })
 			 .catch((err)=>{})
         }
@@ -63,5 +63,6 @@ export default function Editor({ handleAnalyseButtonClicked, authUser }) {
 
         </div>
     );
-
 }
+
+export {version}

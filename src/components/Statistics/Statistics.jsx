@@ -92,6 +92,7 @@ const Statistics = ({ authUser }) => {
           res.data.map((item, index) => {
             let sentences = item.content.map((sentence) => ({
               id: sentence.title,
+              // version: sentence.version,
               sentence: sentence.content,
             }));
             let para = { id: index, sentences: sentences };
