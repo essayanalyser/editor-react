@@ -12,24 +12,26 @@ function App() {
 	const navigate = useNavigate();
 	const [authUser, setAuthUser] = useState(null);
 
-	const handleAnalyseButtonClicked = (typedData) => {
+	const handleAnalyseButtonClicked = async(typedData) => {
+		console.log(typedData)
 		// TODO: Complete this function when linked with backend
 		if (!authUser) {
 			navigate('/auth')
 		} else {
-			// post data to backend
-			console.log(authUser)
-			// preventDefault();
-			axios
-			 .post("http://localhost:8000/api/users/", {
-				title:authUser.email,
-				version:version+1,
-				content: typedData,
-			 })
-			 .then((res)=>{
-				console.log(res.data);
-			 })
-			 .catch((err)=>{})
+			try {
+				// post data to backend
+				console.log(authUser)
+				// preventDefault();
+				const {data} = await axios.post(`http://localhost:8000/api/users/`,{
+					title:authUser.email,
+					version: "1",
+					content: typedData,
+				})
+				console.log(data);
+
+			} catch (error) {
+				console.log(error)
+			}
 		}
 	}
 

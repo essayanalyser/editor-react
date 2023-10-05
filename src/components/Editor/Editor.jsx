@@ -7,7 +7,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
 import axios from "axios";
-let version = -1
+let version 
 export default function Editor({ handleAnalyseButtonClicked, authUser }) {
     const navigate = useNavigate()
     const [typedData, setTypedData] = useState('');
