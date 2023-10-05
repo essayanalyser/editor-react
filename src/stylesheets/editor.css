@@ -19,7 +19,7 @@
 
     justify-content: space-between;
 
-    background-color: rgba(0, 128, 255, 0.986);
+    background-color: #0077b6;
 
     color: white;
 
@@ -67,11 +67,12 @@
 .editorWrapper {
     width: 100%;
     height: 90%;
-
+    background-color: #90e0ef;
     display: flex;
     align-items: center;
     justify-content: center;
-
+    border-left: 13px solid #0077b6;
+    border-right: 13px solid #0077b6;
     position: relative;
 }
 

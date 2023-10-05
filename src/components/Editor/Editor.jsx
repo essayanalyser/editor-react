@@ -1,7 +1,7 @@
 import React, { useState,useEffect } from 'react';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-
+import Statistics from '../Statistics/Statistics';
 import "./../../stylesheets/editor.css"
 import { Link, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -59,8 +59,11 @@ export default function Editor({ handleAnalyseButtonClicked, authUser }) {
                 <div className="submitButtonWrapper">
                     <button className='application-button' onClick={() => handleAnalyseButtonClicked(typedData)}>Analyse</button>
                 </div>
-            </div>
 
+                
+            </div>
+            {/* <Statistics /> */}
+            
         </div>
     );
 }

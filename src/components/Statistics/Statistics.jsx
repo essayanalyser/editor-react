@@ -128,7 +128,7 @@ const Statistics = ({ authUser }) => {
     <div className="statistics">
       <div className="header">Analysis</div>
       <div className="stats">
-        {data.map((item, index) => (
+        {input.map((item, index) => (
           <div className="paragraphStats" key={item.id}>
             <div className="paragraphHeader">
               <div className="paragraphTitle">Paragraph {index + 1}</div>
@@ -225,8 +225,8 @@ const Statistics = ({ authUser }) => {
               <div>
                 {isGraphVisible[index] && (
                   <div className="visuals">
-                    <SentenceLengthChart data={categorizeSentences(data)} />
-                    <BreakdownChart data={calculateWordCounts(data)} />
+                    <SentenceLengthChart data={sentencedata} />
+                    <BreakdownChart data={breakdowndata} />
                   </div>
                 )}
               </div>
