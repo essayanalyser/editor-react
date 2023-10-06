@@ -1,66 +1,121 @@
 import { useEffect, useState } from 'react';
-import { Editor, Statistics, AuthLayout, Login, Signup, UserPage, ResetPass } from './components'
-
+import {
+  Editor,
+  Statistics,
+  AuthLayout,
+  Login,
+  Signup,
+  UserPage,
+  ResetPass,
+} from "./components";
 import "./stylesheets/home.css";
 import { Route as Link, Routes, useNavigate } from "react-router-dom";
-import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from './config/Firebase';
-import { version } from './components/Editor/Editor.jsx'
-import axios from 'axios';
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "./config/Firebase";
+import axios from "axios";
+import VersionControl from "./components/VersionControl/VersionControl";
 
 function App() {
-	const navigate = useNavigate();
-	const [authUser, setAuthUser] = useState(null);
+  const navigate = useNavigate();
+  const [authUser, setAuthUser] = useState(null);
 
-	const handleAnalyseButtonClicked = async(typedData) => {
-		console.log(typedData)
-		// TODO: Complete this function when linked with backend
-		if (!authUser) {
-			navigate('/auth')
-		} else {
-			try {
-				// post data to backend
-				console.log(authUser)
-				// preventDefault();
-				const {data} = await axios.post(`http://localhost:8000/api/users/`,{
-					title:authUser.email,
-					version: "1",
-					content: typedData,
-				})
-				console.log(data);
+  const [versions, setVersions] = useState([]);
+  const [activeVersion, setActiveVersion] = useState("0");
 
-			} catch (error) {
-				console.log(error)
-			}
-		}
-	}
+  const [data, setData] = useState([]);
 
-	useEffect(() => {
-		const unsubscribe = onAuthStateChanged(auth, user => {
-			if (user) {
-				setAuthUser(user)
-				localStorage.setItem('isLoggedIn', true)
-			} else {
-				setAuthUser(null)
-				localStorage.setItem('isLoggedIn', false)
-			}
-		})
+  const getData = () => {
+    if (authUser) {
+      axios
+        .get(`http://localhost:8000/api/users/${authUser.email}/`)
+        .then((res) => {
+          setVersions(res.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  };
 
-		return unsubscribe;
-	}, [])
+  const getNewVersionID = () => {
+    let id = versions?.length;
+    if (id === 0) {
+      return "1";
+    } else {
+      return (id + 1).toString();
+    }
+  };
 
+  useEffect(() => {
+    getData();
+  }, [authUser]);
 
-	return (
+  const handleAnalyseButtonClicked = async (typedData) => {
+    console.log(typedData);
+    // TODO: Complete this function when linked with backend
+    if (!authUser) {
+      navigate("/auth");
+    } else {
+      try {
+        // post data to backend
+        console.log(authUser);
+        // preventDefault();
+        const { data } = await axios.post(
+          `http://localhost:8000/api/users/${authUser?.email}`,
+          {
+            title: authUser.email,
+            version: getNewVersionID(),
+            content: typedData,
+          }
+        );
+        console.log(data);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setAuthUser(user);
+        localStorage.setItem("isLoggedIn", true);
+      } else {
+        setAuthUser(null);
+        localStorage.setItem("isLoggedIn", false);
+      }
+    });
+
+    return unsubscribe;
+  }, []);
+
+  return (
     <Routes>
       <Link
         path="/"
         element={
-          <div id="home">
-            <Editor
-              handleAnalyseButtonClicked={handleAnalyseButtonClicked}
-              authUser={authUser}
-            />
-            <Statistics authUser={authUser} />
+          <div
+            id="home"
+            className="h-screen font-pops w-screen overflow-hidden bg-[#141718] flex"
+          >
+            <div className="h-screen w-screen overflow-hidden flex">
+              <VersionControl
+                activeVersion={activeVersion}
+                setActiveVersion={setActiveVersion}
+                versions={versions}
+                authUser={authUser}
+                setData={setData}
+              />
+              <div className="px-4 py-4 w-full h-full">
+                <div className="rounded-lg bg-white flex h-full w-full">
+                  <Editor
+                    handleAnalyseButtonClicked={handleAnalyseButtonClicked}
+                    authUser={authUser}
+                  />
+                  <Statistics authUser={authUser} data={data} />
+                </div>
+              </div>
+            </div>
           </div>
         }
       />

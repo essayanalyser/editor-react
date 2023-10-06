@@ -12,20 +12,29 @@ const Breakdown = ({ item, isBreakdownVisible }) => {
     return '#9A2617';
   };
   return (
-    <div className={`breakdownWrapper ${isBreakdownVisible ? 'show' : 'hide'}`}>
-    <div className='breakdown'>
-    {item.sentences.map((sentence) => (
-        <div
-        key={sentence.id}
-        className='smallText'
-        style={{ backgroundColor: getHighlightColor(sentence.sentence.split(/\s+/).length),color: getTextColor(sentence.sentence.split(/\s+/).length),padding: '0.5rem',borderRadius: '0.2rem',fontWeight:600,letterSpacing: '0.025em' }}
-        >
-        {sentence.sentence}
-        </div>
-    ))}
+    <div className={`breakdownWrapper ${isBreakdownVisible ? "show" : "hide"}`}>
+      <div className="breakdown">
+        {item.sentences.map((sentence) => (
+          <div
+            key={sentence.id}
+            className="text-xs"
+            style={{
+              backgroundColor: getHighlightColor(
+                sentence.sentence.split(/\s+/).length
+              ),
+              color: getTextColor(sentence.sentence.split(/\s+/).length),
+              padding: "0.5rem",
+              borderRadius: "0.2rem",
+              fontWeight: 600,
+              letterSpacing: "0.025em",
+            }}
+          >
+            {sentence.sentence}
+          </div>
+        ))}
       </div>
-      </div>
-  )
+    </div>
+  );
 }
 
 export default Breakdown

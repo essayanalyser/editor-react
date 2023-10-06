@@ -12,18 +12,26 @@ const Highlighter = ({ item }) => {
     return '#9A2617';
   };
   return (
-    <div className='highlighter'>
-    {item.sentences.map((sentence) => (
+    <div className="text-sm text-justify px-2 mt-2">
+      {item.sentences.map((sentence) => (
         <span
-        key={sentence.id}
-        className='smallText'
-        style={{ backgroundColor: getHighlightColor(sentence.sentence.split(/\s+/).length),color: getTextColor(sentence.sentence.split(/\s+/).length),fontWeight:600,letterSpacing: '0.025em' }}
+          key={sentence.id}
+          className="text-xs"
+          style={{
+            backgroundColor: getHighlightColor(
+              sentence.sentence.split(/\s+/).length
+            ),
+            color: getTextColor(sentence.sentence.split(/\s+/).length),
+            fontWeight: 600,
+            letterSpacing: "0.025em",
+          }}
         >
-            {" "}{sentence.sentence}
+          {" "}
+          {sentence.sentence}.
         </span>
-    ))}
+      ))}
     </div>
-  )
+  );
 }
 
 export default Highlighter

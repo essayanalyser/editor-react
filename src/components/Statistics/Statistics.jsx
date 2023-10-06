@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { input, breakdowndata, sentencedata } from "./dummydata";
 import "./../../stylesheets/statistics.css";
 import SentenceLengthChart from "./components/SentenceLengthChart";
 import BreakdownChart from "./components/BreakdownChart";
 import Breakdown from "./components/Breakdown";
 import Highlighter from "./components/Highlighter";
-import axios from "axios";
 
-const Statistics = ({ authUser }) => {
+const Statistics = ({ authUser, data }) => {
   const calculateSentenceRhythm = (sentences) => {
     const rhythm = sentences.map((sentence) => {
       const wordsCount = sentence.split(/\s+/).length;
@@ -19,9 +17,9 @@ const Statistics = ({ authUser }) => {
   };
 
   const [isBreakdownVisible, setIsBreakdownVisible] = useState(
-    input.map(() => false)
+    data.map(() => false)
   );
-  const [isGraphVisible, setIsGraphVisible] = useState(input.map(() => false));
+  const [isGraphVisible, setIsGraphVisible] = useState(data.map(() => false));
 
   const toggleBreakdownVisibility = (index) => {
     const updatedVisibility = [...isBreakdownVisible];
@@ -34,9 +32,7 @@ const Statistics = ({ authUser }) => {
     setIsGraphVisible(updatedVisibility);
   };
 
-  const [data, setData] = useState([]);
-
-  function categorizeSentences(input) {
+  function categorizeSentences(input, index) {
     const sentencedata = [
       {
         type: "SHORT",
@@ -52,94 +48,81 @@ const Statistics = ({ authUser }) => {
       },
     ];
 
-    // Function to categorize sentences based on word count
     function categorizeSentence(sentence) {
       const words = sentence.split(" ");
       const wordCount = words.length;
 
       if (wordCount <= 5) {
         return "SHORT";
-      } else if (wordCount <= 10) {
+      } else if (wordCount <= 18) {
         return "MEDIUM";
       } else {
         return "LONG";
       }
     }
 
-    // Iterate through the input data and categorize sentences
-    input.forEach((paragraph) => {
-      paragraph.sentences.forEach((sentence) => {
-        const category = categorizeSentence(sentence.sentence);
-
-        // Increment the count for the corresponding category
-        sentencedata.forEach((item) => {
-          if (item.type === category) {
-            item.count++;
-          }
-        });
+    input[index].sentences.forEach((sentence) => {
+      const category = categorizeSentence(sentence.sentence);
+      sentencedata.forEach((item) => {
+        if (item.type === category) {
+          item.count++;
+        }
       });
     });
-
     return sentencedata;
   }
 
-  const getData = () => {
-    if (authUser) {
-      axios
-        .get(`http://localhost:8000/api/users/${authUser.email}/`)
-        .then((res) => {
-          let temp = [];
-          res.data.map((item, index) => {
-            let sentences = item.content.map((sentence) => ({
-              id: sentence.title,
-              // version: sentence.version,
-              sentence: sentence.content,
-            }));
-            let para = { id: index, sentences: sentences };
-            temp.push(para);
-          });
-          setData(temp);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
-  };
-
-  function calculateWordCounts(input) {
+  function calculateWordCounts(input, index) {
     const breakdowndata = [];
-    input.forEach((item) => {
-      item.sentences.forEach((sentence, index) => {
-        const words = sentence.sentence
-          .split(" ")
-          .filter((word) => word !== ""); // Split sentence into words and remove empty strings
-        breakdowndata.push({ id: index + 1, length: words.length });
-      });
+    input[index].sentences.forEach((sentence, index) => {
+      const words = sentence.sentence.split(" ").filter((word) => word !== ""); // Split sentence into words and remove empty strings
+      breakdowndata.push({ id: index + 1, length: words.length });
     });
-
     return breakdowndata;
   }
 
+  function transformInput(inputData) {
+    const outputData = inputData.map((para, paraIndex) => {
+      const id = `p${paraIndex + 1}`;
+      const sentences = para.sentences.map((sentence, sentenceIndex) => ({
+        id: `${id}s${sentenceIndex + 1}`,
+        sentence: sentence.content,
+      }));
+
+      return {
+        id,
+        sentences,
+      };
+    });
+
+    return outputData;
+  }
+
+  const [analyseData, setAnalyseData] = useState([]);
+
   useEffect(() => {
-    getData();
-  }, [authUser]);
+    if (authUser) {
+      setAnalyseData(transformInput(data));
+    }
+  }, [data, authUser]);
 
   return (
-    <div className="statistics">
-      <div className="header">Analysis</div>
-      <div className="stats">
-        {input.map((item, index) => (
-          <div className="paragraphStats" key={item.id}>
-            <div className="paragraphHeader">
-              <div className="paragraphTitle">Paragraph {index + 1}</div>
-              <div className="paragraphLength">
+    <div className="h-full w-1/2 bg-gray-50 border-l-[1px] border-gray-300 overflow-hidden px-3 py-6">
+      <div className="w-full overflow-y-auto h-full">
+        {analyseData?.map((item, index) => (
+          <div className="flex flex-col w-full gap-2" key={item.id}>
+            <div className="flex flex-col w-full px-2 items-start justify-center">
+              <div className="text-[#0084FF] font-bold text-lg">
+                Paragraph {index + 1}
+              </div>
+              <div className="text-xs text-gray-500">
                 {item.sentences.length} sentences
               </div>
             </div>
             <Highlighter item={item} />
-            <div className="accordion">
+            <div className="bg-white border-2 border-gray-300 border-opacity-40 cursor-pointer rounded-md px-3 py-2 overflow-hidden">
               <div
-                className="accordionHeader"
+                className="text-sm flex justify-between font-semibold items-center text-[#0084FF]"
                 onClick={() => toggleBreakdownVisibility(index)}
               >
                 <span>Breakdown</span>
@@ -147,8 +130,8 @@ const Statistics = ({ authUser }) => {
                   {isBreakdownVisible[index] ? (
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      width="10"
-                      height="10"
+                      width="12"
+                      height="12"
                       fill="currentColor"
                       className="bi bi-chevron-up"
                       viewBox="0 0 16 16"
@@ -161,8 +144,8 @@ const Statistics = ({ authUser }) => {
                   ) : (
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      width="10"
-                      height="10"
+                      width="12"
+                      height="12"
                       fill="currentColor"
                       className="bi bi-chevron-down"
                       viewBox="0 0 16 16"
@@ -184,9 +167,9 @@ const Statistics = ({ authUser }) => {
                 )}
               </div>
             </div>
-            <div className="accordion">
+            <div className="bg-white border-2 border-gray-300 border-opacity-40 cursor-pointer rounded-md px-3 py-2 overflow-hidden">
               <div
-                className="accordionHeader"
+                className="text-sm flex justify-between font-semibold items-center text-[#0084FF]"
                 onClick={() => toggleGraphVisibility(index)}
               >
                 <span>Visuals ✨</span>
@@ -225,8 +208,12 @@ const Statistics = ({ authUser }) => {
               <div>
                 {isGraphVisible[index] && (
                   <div className="visuals">
-                    <SentenceLengthChart data={sentencedata} />
-                    <BreakdownChart data={breakdowndata} />
+                    <SentenceLengthChart
+                      data={categorizeSentences(analyseData, index)}
+                    />
+                    <BreakdownChart
+                      data={calculateWordCounts(analyseData, index)}
+                    />
                   </div>
                 )}
               </div>
