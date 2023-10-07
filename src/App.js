@@ -27,7 +27,7 @@ function App() {
   const getData = () => {
     if (authUser) {
       axios
-        .get(`http://localhost:8000/api/users/${authUser.email}/`)
+        .get(`http://localhost:8000/users/${authUser.email}/`)
         .then((res) => {
           setVersions(res.data);
         })
@@ -38,10 +38,13 @@ function App() {
   };
 
   const getNewVersionID = () => {
-    let id = versions?.length;
+    let version_no = versions[0]["version"]
+    // console.log(versions[0]["version"])
+    let id = version_no?.length;
     if (id === 0) {
       return "1";
     } else {
+      console.log( (id+1).toString()); 
       return (id + 1).toString();
     }
   };
@@ -61,11 +64,14 @@ function App() {
         console.log(authUser);
         // preventDefault();
         const { data } = await axios.post(
-          `http://localhost:8000/api/users/${authUser?.email}`,
+          `http://localhost:8000/api/users/`,
           {
-            title: authUser.email,
-            version: getNewVersionID(),
-            content: typedData,
+            key:authUser.email,
+            data : {
+              version: getNewVersionID(),
+              content: typedData,
+            }
+            
           }
         );
         console.log(data);
