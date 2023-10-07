@@ -29,6 +29,8 @@ function App() {
       axios
         .get(`http://localhost:8000/users/${authUser.email}/`)
         .then((res) => {
+          console.log(res.data);
+          // console.log(getNewVersionID());
           setVersions(res.data);
         })
         .catch((err) => {
@@ -38,15 +40,11 @@ function App() {
   };
 
   const getNewVersionID = () => {
-    let version_no = versions[0]["version"]
-    // console.log(versions[0]["version"])
-    let id = version_no?.length;
-    if (id === 0) {
-      return "1";
-    } else {
-      console.log( (id+1).toString()); 
-      return (id + 1).toString();
+    if (versions.length === 0) {
+      return "0";
     }
+    let id = versions?.length;
+    return id.toString();
   };
 
   useEffect(() => {
@@ -59,25 +57,21 @@ function App() {
     if (!authUser) {
       navigate("/auth");
     } else {
-      try {
-        // post data to backend
-        console.log(authUser);
-        // preventDefault();
-        const { data } = await axios.post(
-          `http://localhost:8000/api/users/`,
-          {
-            key:authUser.email,
-            data : {
-              version: getNewVersionID(),
-              content: typedData,
-            }
-            
-          }
-        );
-        console.log(data);
-      } catch (error) {
-        console.log(error);
-      }
+      await axios
+        .post(`http://localhost:8000/api/users/`, {
+          key: authUser.email,
+          data: {
+            version: getNewVersionID(),
+            content: typedData,
+          },
+        })
+        .then((res) => {
+          getData();
+          setActiveVersion(getNewVersionID());
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
   };
 
@@ -106,17 +100,18 @@ function App() {
           >
             <div className="h-screen w-screen overflow-hidden flex">
               <VersionControl
-                activeVersion={activeVersion}
-                setActiveVersion={setActiveVersion}
-                versions={versions}
-                authUser={authUser}
-                setData={setData}
+                activeVersion={activeVersion || "0"}
+                setActiveVersion={setActiveVersion || "0"}
+                versions={versions || []}
+                authUser={authUser || null}
+                setData={setData || []}
               />
               <div className="px-4 py-4 w-full h-full">
                 <div className="rounded-lg bg-white flex h-full w-full">
                   <Editor
                     handleAnalyseButtonClicked={handleAnalyseButtonClicked}
                     authUser={authUser}
+                    olderVersionData={data}
                   />
                   <Statistics authUser={authUser} data={data} />
                 </div>

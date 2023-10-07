@@ -12,36 +12,39 @@ const VersionControl = ({
   setData,
 }) => {
   const navigate = useNavigate();
+
   useEffect(() => {
     if (versions?.length) {
       setActiveVersion(versions[versions.length - 1].version);
       setData(versions[versions.length - 1].content);
     }
   }, [versions, setActiveVersion, setData]);
+
   return (
     <div className="h-screen w-1/4 flex flex-col justify-between px-4 py-6">
       <div className="flex gap-2 items-center">
         <img src={Logo} alt="logo" className="h-8 w-8" />
         <div className="text-white text-2xl font-bold">Analyser</div>
       </div>
-      <div className="flex h-full my-4 flex-col gap-1 text-sm text-white overflow-y-auto">
-        {versions?.map((version) => (
-          <div key={version.version}>
-            <button
-              className={`${
-                activeVersion === version.version
-                  ? "bg-gray-100 bg-opacity-30"
-                  : "hover:bg-gray-50 bg-opacity-30"
-              } w-full flex justify-start px-4 items-center py-2 rounded-md`}
-              onClick={() => {
-                setActiveVersion(version.version);
-                setData(version.content);
-              }}
-            >
-              Version : {version.version}
-            </button>
-          </div>
-        ))}
+      <div className="flex h-full my-4 flex-col gap-1 text-sm text-white overflow-y-auto hideScroll">
+        {Array.isArray(versions) &&
+          versions.map((version, index) => (
+            <div key={version?.version}>
+              <button
+                className={`${
+                  activeVersion === version?.version
+                    ? "bg-gray-100 bg-opacity-30"
+                    : "hover:bg-gray-50 hover:bg-opacity-30"
+                } w-full flex justify-start px-4 items-center py-2 rounded-md`}
+                onClick={() => {
+                  setActiveVersion(version?.version);
+                  setData(version?.content);
+                }}
+              >
+                Version : {index}
+              </button>
+            </div>
+          ))}
       </div>
       <div className="flex items-center justify-between h-12 w-full">
         <div className="w-32 text-sm truncate text-white">

@@ -84,11 +84,14 @@ const Statistics = ({ authUser, data }) => {
   function transformInput(inputData) {
     const outputData = inputData.map((para, paraIndex) => {
       const id = `p${paraIndex + 1}`;
-      const sentences = para.sentences.map((sentence, sentenceIndex) => ({
-        id: `${id}s${sentenceIndex + 1}`,
-        sentence: sentence.content,
-      }));
-
+      const sentences = para.sentences
+        .filter((sentence) => {
+          return sentence.content !== "";
+        })
+        .map((sentence, sentenceIndex) => ({
+          id: `${id}s${sentenceIndex + 1}`,
+          sentence: sentence.content,
+        }));
       return {
         id,
         sentences,
@@ -108,7 +111,7 @@ const Statistics = ({ authUser, data }) => {
 
   return (
     <div className="h-full w-1/2 bg-gray-50 border-l-[1px] border-gray-300 overflow-hidden px-3 py-6">
-      <div className="w-full overflow-y-auto h-full">
+      <div className="w-full overflow-y-auto h-full hideScroll">
         {analyseData?.map((item, index) => (
           <div className="flex flex-col w-full gap-2" key={item.id}>
             <div className="flex flex-col w-full px-2 items-start justify-center">
