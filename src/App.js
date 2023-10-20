@@ -60,6 +60,7 @@ function App() {
       await axios
         .post(`http://localhost:8000/api/users/`, {
           key: authUser.email,
+          doc_name: "This will be user provided name",
           data: {
             version: getNewVersionID(),
             content: typedData,
