@@ -23,7 +23,7 @@ function App() {
   const [activeVersion, setActiveVersion] = useState("0");
 
   const [data, setData] = useState([]);
-
+  const count = 0;
   const getData = () => {
     if (authUser) {
       axios
@@ -57,23 +57,28 @@ function App() {
     if (!authUser) {
       navigate("/auth");
     } else {
-      await axios
-        .post(`http://localhost:8000/api/users/`, {
-          key: authUser.email,
-          doc_name: "This will be user provided name",
-          data: {
-            version: getNewVersionID(),
-            content: typedData,
-          },
-        })
-        .then((res) => {
-          getData();
-          setActiveVersion(getNewVersionID());
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      try {
+        // post data to backend
+        console.log(authUser);
+        // preventDefault();
+        const { data } = await axios.post(
+          `http://localhost:8000/users/`,
+          {
+            key:authUser.email,
+            doc_name: "This will be user provided name",
+            data : {
+              version: getNewVersionID(),
+              content: typedData,
+            }
+            
+          }
+        );
+        console.log(data);
+      } catch (error) {
+        console.log(error);
+      }
     }
+    getData()
   };
 
   useEffect(() => {

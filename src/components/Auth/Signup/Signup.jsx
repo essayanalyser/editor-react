@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 
 import { auth } from "../../../config/Firebase";
+import axios from "axios"
 
 function Signup() {
   const navigate = useNavigate();
@@ -41,6 +42,14 @@ function Signup() {
         await updateProfile(user, {
           displayName: values.name,
         });
+        axios.post(
+          `http://localhost:8000/api/users/`,
+          {
+            title: values.email,
+            version:"0",
+            content: "Hey there!"
+          }
+        )
         navigate("/");
       })
       .catch((err) => {
