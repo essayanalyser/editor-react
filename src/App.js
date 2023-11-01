@@ -14,33 +14,37 @@ import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./config/Firebase";
 import axios from "axios";
 import VersionControl from "./components/VersionControl/VersionControl";
+import toast from "react-hot-toast";
 
 function App() {
   const navigate = useNavigate();
   const [authUser, setAuthUser] = useState(null);
 
+  const [docName, setDocName] = useState("");
+
+  const [docData, setDocData] = useState([]);
+  const [currentDoc, setCurrentDoc] = useState(null);
+
   const [versions, setVersions] = useState([]);
   const [activeVersion, setActiveVersion] = useState("0");
 
-  const [data, setData] = useState([]);
-  const count = 0;
   const getData = () => {
     if (authUser) {
       axios
         .get(`http://localhost:8000/users/${authUser.email}/`)
         .then((res) => {
+          toast.success("Data fetched successfully");
           console.log(res.data);
-          // console.log(getNewVersionID());
-          setVersions(res.data);
+          setDocData(res.data);
         })
         .catch((err) => {
-          console.log(err);
+          toast.error("Error fetching data", err);
         });
     }
   };
 
   const getNewVersionID = () => {
-    if (versions.length === 0) {
+    if (currentDoc?.versions?.length === 0) {
       return "0";
     }
     let id = versions?.length;
@@ -51,6 +55,10 @@ function App() {
     getData();
   }, [authUser]);
 
+  useEffect(() => {
+    setVersions(currentDoc?.versions);
+  }, [currentDoc]);
+
   const handleAnalyseButtonClicked = async (typedData) => {
     console.log(typedData);
     // TODO: Complete this function when linked with backend
@@ -60,25 +68,20 @@ function App() {
       try {
         // post data to backend
         console.log(authUser);
-        // preventDefault();
-        const { data } = await axios.post(
-          `http://localhost:8000/users/`,
-          {
-            key:authUser.email,
-            doc_name: "This will be user provided name",
-            data : {
-              version: getNewVersionID(),
-              content: typedData,
-            }
-            
-          }
-        );
+        const { data } = await axios.post(`http://localhost:8000/users/`, {
+          key: authUser.email,
+          doc_name: "This will be user provided name",
+          data: {
+            version: getNewVersionID(),
+            content: typedData,
+          },
+        });
         console.log(data);
       } catch (error) {
         console.log(error);
       }
     }
-    getData()
+    getData();
   };
 
   useEffect(() => {
@@ -108,18 +111,21 @@ function App() {
               <VersionControl
                 activeVersion={activeVersion || "0"}
                 setActiveVersion={setActiveVersion || "0"}
+                docData={docData || []}
+                currentDoc={currentDoc || null}
+                setCurrentDoc={setCurrentDoc || null}
                 versions={versions || []}
                 authUser={authUser || null}
-                setData={setData || []}
+                setDocName={setDocName}
               />
               <div className="px-4 py-4 w-full h-full">
                 <div className="rounded-lg bg-white flex h-full w-full">
-                  <Editor
+                  {/* <Editor
                     handleAnalyseButtonClicked={handleAnalyseButtonClicked}
                     authUser={authUser}
                     olderVersionData={data}
                   />
-                  <Statistics authUser={authUser} data={data} />
+                  <Statistics authUser={authUser} data={data} /> */}
                 </div>
               </div>
             </div>
