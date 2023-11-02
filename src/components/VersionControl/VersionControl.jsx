@@ -16,6 +16,7 @@ const VersionControl = ({
   setCurrentDoc,
   setDocName,
   setData,
+  setDocData,
 }) => {
   const navigate = useNavigate();
 
@@ -95,6 +96,7 @@ const VersionControl = ({
           setShowNewDocModal={setShowNewDocModal}
           setCurrentDoc={setCurrentDoc}
           setDocName={setDocName}
+          setDocData={setDocData}
         />
       )}
     </div>

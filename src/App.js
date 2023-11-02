@@ -79,9 +79,9 @@ function App() {
             content: typedData,
           },
         });
-        console.log(data);
+        toast.success("Data saved successfully");
       } catch (error) {
-        console.log(error);
+        toast.error("Error saving data", error);
       }
     }
     getData();
@@ -121,6 +121,7 @@ function App() {
                 authUser={authUser || null}
                 setDocName={setDocName}
                 setData={setData}
+                setDocData={setDocData}
               />
               <div className="px-4 py-4 w-full h-full">
                 <div className="rounded-lg bg-white flex h-full w-full">

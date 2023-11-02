@@ -1,11 +1,17 @@
 import React, { useState } from "react";
 
-const NewDocModal = ({ setShowNewDocModal, setCurrentDoc, setDocName }) => {
+const NewDocModal = ({
+  setShowNewDocModal,
+  setCurrentDoc,
+  setDocName,
+  setDocData,
+}) => {
   const [value, setValue] = useState("");
   const changeCurrentDoc = () => {
     setDocName(value);
     setCurrentDoc(value);
     setShowNewDocModal(false);
+    setDocData((prev) => [...prev, { doc_name: value, versions: [] }]);
   };
   return (
     <div className="h-screen fixed top-0 left-0 z-50 w-screen bg-black bg-opacity-10 backdrop-blur-sm flex justify-center items-center">
