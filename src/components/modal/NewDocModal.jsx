@@ -6,7 +6,10 @@ const NewDocModal = ({
   setDocName,
   setDocData,
 }) => {
+  // State for new doc name
   const [value, setValue] = useState("");
+
+  // Function to change current doc name and add new doc to docData temporarily (until saved)
   const changeCurrentDoc = () => {
     setDocName(value);
     setCurrentDoc(value);

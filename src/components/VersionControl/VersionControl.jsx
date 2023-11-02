@@ -21,15 +21,10 @@ const VersionControl = ({
 }) => {
   const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   if (versions?.length) {
-  //     setActiveVersion(versions[versions.length - 1].version);
-  //     setData(versions[versions.length - 1].content);
-  //   }
-  // }, [versions, setActiveVersion, setData]);
-
+  // State for new document modal visibility
   const [showNewDocModal, setShowNewDocModal] = useState(false);
 
+  // Function to handle new document button click
   const newDocButtonHandler = () => {
     setShowNewDocModal(true);
   };

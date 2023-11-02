@@ -9,7 +9,10 @@ const Accordion = ({
   setActiveVersion,
   docName,
 }) => {
+  // State for accordion open status
   const [isOpen, setIsOpen] = useState(false);
+
+  // Effect to set open status based on doc name. If doc name matches, open accordion
   useEffect(() => {
     if (doc.doc_name === docName) {
       setIsOpen(true);

@@ -9,8 +9,10 @@ export default function Editor({
   authUser,
   olderVersionData,
 }) {
+  // State for typed data
   const [typedData, setTypedData] = useState("");
 
+  // Function to modify data
   const modify = (data) => {
     let output = "";
     data.forEach((item) => {
@@ -23,10 +25,10 @@ export default function Editor({
     return output;
   };
 
+  // Effect to set typed data when olderVersionData changes
   useEffect(() => {
     if (olderVersionData) {
       setTypedData(modify(olderVersionData));
-      // console.log(modify(olderVersionData));
     }
   }, [olderVersionData]);
 

@@ -17,19 +17,27 @@ import VersionControl from "./components/VersionControl/VersionControl";
 import toast from "react-hot-toast";
 
 function App() {
+  // Initialize navigation
   const navigate = useNavigate();
+
+  // State for authenticated user
   const [authUser, setAuthUser] = useState(null);
 
+  // State for data that is used the statistics and editor component
   const [data, setData] = useState([]);
 
+  // State for active document name
   const [docName, setDocName] = useState("");
 
+  // State for document data
   const [docData, setDocData] = useState([]);
   const [currentDoc, setCurrentDoc] = useState(null);
 
+  // State for versions
   const [versions, setVersions] = useState([]);
   const [activeVersion, setActiveVersion] = useState("0");
 
+  // Function to get data
   const getData = () => {
     if (authUser) {
       axios
@@ -43,18 +51,23 @@ function App() {
     }
   };
 
+  // Function to get new version ID in the current document
   const getNewVersionID = () => {
+    // if there is a new document, returns 0
     if (!currentDoc?.versions || currentDoc?.versions?.length === 0) {
       return "0";
     }
+    // else returns the length of the versions array
     let id = versions?.length;
     return id.toString();
   };
 
+  // Effect to get data when authUser changes
   useEffect(() => {
     getData();
   }, [authUser]);
 
+  // Effect to set active version and versions when currentDoc changes
   useEffect(() => {
     if (currentDoc?.versions?.length === 0) {
       setActiveVersion("0");
@@ -65,6 +78,7 @@ function App() {
     setVersions(currentDoc?.versions);
   }, [currentDoc]);
 
+  // Function to handle click on Analyse button
   const handleAnalyseButtonClicked = async (typedData) => {
     if (!authUser) {
       navigate("/auth");
@@ -88,6 +102,7 @@ function App() {
     getData();
   };
 
+  // Effect to handle authentication state
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {

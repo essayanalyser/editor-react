@@ -7,6 +7,7 @@ import Highlighter from "./components/Highlighter";
 import { Empty } from "antd";
 
 const Statistics = ({ authUser, data }) => {
+  // Function to calculate sentence rhythm
   const calculateSentenceRhythm = (sentences) => {
     const rhythm = sentences.map((sentence) => {
       const wordsCount = sentence.split(/\s+/).length;
@@ -17,11 +18,13 @@ const Statistics = ({ authUser, data }) => {
     return rhythm.join(",");
   };
 
+  // State for breakdown and graph visibility
   const [isBreakdownVisible, setIsBreakdownVisible] = useState(
     data.map(() => false)
   );
   const [isGraphVisible, setIsGraphVisible] = useState(data.map(() => false));
 
+  // Functions to toggle breakdown and graph visibility
   const toggleBreakdownVisibility = (index) => {
     const updatedVisibility = [...isBreakdownVisible];
     updatedVisibility[index] = !updatedVisibility[index];
@@ -33,6 +36,7 @@ const Statistics = ({ authUser, data }) => {
     setIsGraphVisible(updatedVisibility);
   };
 
+  // Functions to categorize sentences and calculate word counts
   function categorizeSentences(input, index) {
     const sentencedata = [
       {
@@ -72,7 +76,6 @@ const Statistics = ({ authUser, data }) => {
     });
     return sentencedata;
   }
-
   function calculateWordCounts(input, index) {
     const breakdowndata = [];
     input[index].sentences.forEach((sentence, index) => {
@@ -82,6 +85,7 @@ const Statistics = ({ authUser, data }) => {
     return breakdowndata;
   }
 
+  // Function to transform input data
   function transformInput(inputData) {
     const outputData = inputData.map((para, paraIndex) => {
       const id = `p${paraIndex + 1}`;
@@ -102,8 +106,10 @@ const Statistics = ({ authUser, data }) => {
     return outputData;
   }
 
+  // State for analysis data
   const [analyseData, setAnalyseData] = useState([]);
 
+  // Effect to set analysis data when authUser or data changes
   useEffect(() => {
     if (authUser) {
       setAnalyseData(transformInput(data));
