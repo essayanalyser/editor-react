@@ -20,6 +20,8 @@ function App() {
   const navigate = useNavigate();
   const [authUser, setAuthUser] = useState(null);
 
+  const [data, setData] = useState([]);
+
   const [docName, setDocName] = useState("");
 
   const [docData, setDocData] = useState([]);
@@ -34,7 +36,6 @@ function App() {
         .get(`http://localhost:8000/users/${authUser.email}/`)
         .then((res) => {
           toast.success("Data fetched successfully");
-          console.log(res.data);
           setDocData(res.data);
         })
         .catch((err) => {
@@ -44,7 +45,7 @@ function App() {
   };
 
   const getNewVersionID = () => {
-    if (currentDoc?.versions?.length === 0) {
+    if (!currentDoc?.versions || currentDoc?.versions?.length === 0) {
       return "0";
     }
     let id = versions?.length;
@@ -56,21 +57,23 @@ function App() {
   }, [authUser]);
 
   useEffect(() => {
+    if (currentDoc?.versions?.length === 0) {
+      setActiveVersion("0");
+      setVersions([]);
+      return;
+    }
+    setActiveVersion(currentDoc?.versions?.length - 1);
     setVersions(currentDoc?.versions);
   }, [currentDoc]);
 
   const handleAnalyseButtonClicked = async (typedData) => {
-    console.log(typedData);
-    // TODO: Complete this function when linked with backend
     if (!authUser) {
       navigate("/auth");
     } else {
       try {
-        // post data to backend
-        console.log(authUser);
         const { data } = await axios.post(`http://localhost:8000/users/`, {
           key: authUser.email,
-          doc_name: "This will be user provided name",
+          doc_name: docName,
           data: {
             version: getNewVersionID(),
             content: typedData,
@@ -117,15 +120,16 @@ function App() {
                 versions={versions || []}
                 authUser={authUser || null}
                 setDocName={setDocName}
+                setData={setData}
               />
               <div className="px-4 py-4 w-full h-full">
                 <div className="rounded-lg bg-white flex h-full w-full">
-                  {/* <Editor
+                  <Editor
                     handleAnalyseButtonClicked={handleAnalyseButtonClicked}
                     authUser={authUser}
                     olderVersionData={data}
                   />
-                  <Statistics authUser={authUser} data={data} /> */}
+                  <Statistics authUser={authUser} data={data} />
                 </div>
               </div>
             </div>

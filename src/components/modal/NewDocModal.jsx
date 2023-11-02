@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 
-const NewDocModal = ({ setShowNewDocModal, setCurrentDoc }) => {
+const NewDocModal = ({ setShowNewDocModal, setCurrentDoc, setDocName }) => {
   const [value, setValue] = useState("");
   const changeCurrentDoc = () => {
+    setDocName(value);
     setCurrentDoc(value);
     setShowNewDocModal(false);
   };

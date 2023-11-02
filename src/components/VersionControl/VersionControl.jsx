@@ -4,25 +4,29 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import Logo from "../../assets/logo.svg";
 import NewDocModal from "../modal/NewDocModal";
+import Accordion from "./Accordion";
 
 const VersionControl = ({
   activeVersion,
   setActiveVersion,
   versions,
   authUser,
+  docData,
+  currentDoc,
+  setCurrentDoc,
+  setDocName,
   setData,
 }) => {
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (versions?.length) {
-      setActiveVersion(versions[versions.length - 1].version);
-      setData(versions[versions.length - 1].content);
-    }
-  }, [versions, setActiveVersion, setData]);
+  // useEffect(() => {
+  //   if (versions?.length) {
+  //     setActiveVersion(versions[versions.length - 1].version);
+  //     setData(versions[versions.length - 1].content);
+  //   }
+  // }, [versions, setActiveVersion, setData]);
 
   const [showNewDocModal, setShowNewDocModal] = useState(false);
-  const [currentDoc, setCurrentDoc] = useState("");
 
   const newDocButtonHandler = () => {
     setShowNewDocModal(true);
@@ -35,24 +39,18 @@ const VersionControl = ({
         <div className="text-white text-2xl font-bold">Analyser</div>
       </div>
       <div className="flex h-full my-4 flex-col gap-1 text-sm text-white overflow-y-auto hideScroll">
-        {Array.isArray(versions) &&
-          versions.map((version, index) => (
-            <div key={version?.version}>
-              <button
-                className={`${
-                  activeVersion === version?.version
-                    ? "bg-gray-100 bg-opacity-30"
-                    : "hover:bg-gray-50 hover:bg-opacity-30"
-                } w-full flex justify-start px-4 items-center py-2 rounded-md`}
-                onClick={() => {
-                  setActiveVersion(version?.version);
-                  setData(version?.content);
-                }}
-              >
-                Version : {index}
-              </button>
-            </div>
-          ))}
+        {docData?.map((doc, index) => (
+          <Accordion
+            key={index}
+            doc={doc}
+            setData={setData}
+            setCurrentDoc={setCurrentDoc}
+            setDocName={setDocName}
+            activeVersion={activeVersion}
+            setActiveVersion={setActiveVersion}
+            docName={currentDoc?.doc_name}
+          />
+        ))}
       </div>
       <div
         className="flex items-center justify-center h-16 w-full text-white border-[1px] border-gray-100 border-opacity-20 hover:bg-gray-100 hover:bg-opacity-20 text-xs rounded-md cursor-pointer"
@@ -96,6 +94,7 @@ const VersionControl = ({
         <NewDocModal
           setShowNewDocModal={setShowNewDocModal}
           setCurrentDoc={setCurrentDoc}
+          setDocName={setDocName}
         />
       )}
     </div>
