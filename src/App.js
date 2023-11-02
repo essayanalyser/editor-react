@@ -35,7 +35,6 @@ function App() {
       axios
         .get(`http://localhost:8000/users/${authUser.email}/`)
         .then((res) => {
-          toast.success("Data fetched successfully");
           setDocData(res.data);
         })
         .catch((err) => {
@@ -69,6 +68,8 @@ function App() {
   const handleAnalyseButtonClicked = async (typedData) => {
     if (!authUser) {
       navigate("/auth");
+    } else if (docName === "") {
+      toast.error("Please enter a document name");
     } else {
       try {
         const { data } = await axios.post(`http://localhost:8000/users/`, {
