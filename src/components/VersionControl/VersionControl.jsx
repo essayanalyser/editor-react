@@ -5,6 +5,7 @@ import { faUser } from "@fortawesome/free-solid-svg-icons";
 import Logo from "../../assets/logo.svg";
 import NewDocModal from "../modal/NewDocModal";
 import Accordion from "./Accordion";
+import { FolderAddOutlined, UserOutlined } from "@ant-design/icons";
 
 const VersionControl = ({
   activeVersion,
@@ -39,7 +40,8 @@ const VersionControl = ({
         <img src={Logo} alt="logo" className="h-8 w-8" />
         <div className="text-white text-2xl font-bold">Analyser</div>
       </div>
-      <div className="flex h-full my-4 flex-col gap-1 text-sm text-white overflow-y-auto hideScroll">
+      <div className="text-xs font-bold text-gray-500 mt-4">Documents</div>
+      <div className="flex h-full mb-4 flex-col gap-1 text-sm text-white overflow-y-auto hideScroll">
         {docData?.map((doc, index) => (
           <Accordion
             key={index}
@@ -59,36 +61,28 @@ const VersionControl = ({
           newDocButtonHandler();
         }}
       >
-        <div className="w-[20%] h-full flex justify-center items-center">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="currentColor"
-          >
-            <path d="M19.75 11H12.5V3.75C12.5 3.33579 12.1642 3 11.75 3C11.3358 3 11 3.33579 11 3.75V11H3.75C3.33579 11 3 11.3358 3 11.75C3 12.1642 3.33579 12.5 3.75 12.5H11V19.75C11 20.1642 11.3358 20.5 11.75 20.5C12.1642 20.5 12.5 20.1642 12.5 19.75V12.5H19.75C20.1642 12.5 20.5 12.1642 20.5 11.75C20.5 11.3358 20.1642 11 19.75 11Z" />
-          </svg>
+        <div className="w-[30%] h-full text-lg flex justify-center items-center">
+          <FolderAddOutlined />
         </div>
         <div className="w-[80%] h-full flex items-center">New Doc</div>
       </div>
       <div className="flex items-center justify-between mt-5 h-12 w-full">
-        <div className="w-32 text-sm truncate text-white">
-          {authUser?.email}
+        <div className="w-32 text-xs truncate text-white">
+          {authUser?.email?.split("@")[0]}
         </div>
         {JSON.parse(localStorage.getItem("isLoggedIn")) || authUser ? (
           <div
-            className="userInfo"
+            className="w-12 h-12 rounded-full hover:bg-white hover:bg-opacity-10 text-white flex justify-center items-center cursor-pointer"
             title={authUser?.displayName}
             onClick={() => navigate("/auth")}
           >
-            <FontAwesomeIcon icon={faUser} />
+            <UserOutlined />
           </div>
         ) : (
-          <>
+          <div className="w-full justify-between flex items-center">
             <Link to="/auth/login">Login</Link>
             <Link to="/auth/signup">Signup</Link>
-          </>
+          </div>
         )}
       </div>
       {showNewDocModal && (
