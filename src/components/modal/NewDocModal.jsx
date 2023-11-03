@@ -5,6 +5,7 @@ const NewDocModal = ({
   setCurrentDoc,
   setDocName,
   setDocData,
+  setData,
 }) => {
   // State for new doc name
   const [value, setValue] = useState("");
@@ -14,6 +15,7 @@ const NewDocModal = ({
     setDocName(value);
     setCurrentDoc(value);
     setShowNewDocModal(false);
+    setData([]);
     setDocData((prev) => [...prev, { doc_name: value, versions: [] }]);
   };
   return (

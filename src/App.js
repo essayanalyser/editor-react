@@ -82,7 +82,7 @@ function App() {
   const handleAnalyseButtonClicked = async (typedData) => {
     if (!authUser) {
       navigate("/auth");
-    } else if (docName === "") {
+    } else if (docName === "" || currentDoc === null)  {
       toast.error("Please enter a document name");
     } else {
       try {

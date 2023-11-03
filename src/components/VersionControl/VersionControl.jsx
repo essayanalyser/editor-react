@@ -86,6 +86,7 @@ const VersionControl = ({
           setCurrentDoc={setCurrentDoc}
           setDocName={setDocName}
           setDocData={setDocData}
+          setData={setData}
         />
       )}
     </div>
