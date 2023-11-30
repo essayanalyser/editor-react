@@ -6,6 +6,8 @@ import Logo from "../../assets/logo.svg";
 import NewDocModal from "../modal/NewDocModal";
 import Accordion from "./Accordion";
 import { FolderAddOutlined, UserOutlined } from "@ant-design/icons";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 const VersionControl = ({
   activeVersion,
@@ -18,6 +20,7 @@ const VersionControl = ({
   setDocName,
   setData,
   setDocData,
+  getData,
 }) => {
   const navigate = useNavigate();
 
@@ -27,6 +30,50 @@ const VersionControl = ({
   // Function to handle new document button click
   const newDocButtonHandler = () => {
     setShowNewDocModal(true);
+  };
+
+  const deleteDoc = (document_name) => {
+    axios
+      .delete(`http://localhost:8000/users/${authUser.email}/${document_name}`)
+      .then((res) => {
+        getData();
+        toast.success("Document Deleted Successfully!");
+        setCurrentDoc(null);
+        setDocName("");
+        setData([]);
+        setDocData([]);
+      })
+      .catch((err) => toast.error(err.message));
+  };
+
+  const deleteVersion = (document_name, version) => {
+    let v = parseInt(version);
+    console.log(document_name, version, v);
+    axios
+      .delete(
+        `http://localhost:8000/users/${authUser.email}/${document_name}/${v}`
+      )
+      .then((res) => {
+        getData();
+        toast.success("Version Deleted Successfully!");
+        const d = docData.filter((doc) => doc.doc_name === document_name);
+        if (version === 0) {
+          if (d.versions.length !== 0) {
+            setCurrentDoc(d);
+            setDocName(d.doc_name);
+            setActiveVersion(d.versions[1]);
+            setData(d.versions[1].content);
+            setDocData(d.versions[1].content);
+          }
+        } else {
+          setCurrentDoc(d);
+          setDocName(d.doc_name);
+          setActiveVersion(d.versions[0]);
+          setData(d.versions[0].content);
+          setDocData(d.versions[0].content);
+        }
+      })
+      .catch((err) => toast.error(err.message));
   };
 
   return (
@@ -47,6 +94,8 @@ const VersionControl = ({
             activeVersion={activeVersion}
             setActiveVersion={setActiveVersion}
             docName={currentDoc?.doc_name}
+            deleteDoc={deleteDoc}
+            deleteVersion={deleteVersion}
           />
         ))}
       </div>

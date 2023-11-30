@@ -44,6 +44,7 @@ function App() {
         .get(`http://localhost:8000/users/${authUser.email}/`)
         .then((res) => {
           setDocData(res.data);
+          console.log(res.data);
         })
         .catch((err) => {
           toast.error("Error fetching data", err);
@@ -82,7 +83,7 @@ function App() {
   const handleAnalyseButtonClicked = async (typedData) => {
     if (!authUser) {
       navigate("/auth");
-    } else if (docName === "" || currentDoc === null)  {
+    } else if (docName === "" || currentDoc === null) {
       toast.error("Please enter a document name");
     } else {
       try {
@@ -138,6 +139,7 @@ function App() {
                 setDocName={setDocName}
                 setData={setData}
                 setDocData={setDocData}
+                getData={getData}
               />
               <div className="px-4 py-4 w-full h-full">
                 <div className="rounded-lg bg-white flex h-full w-full">
