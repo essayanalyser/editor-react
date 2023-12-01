@@ -34,7 +34,7 @@ const VersionControl = ({
 
   const deleteDoc = (document_name) => {
     axios
-      .delete(`http://localhost:8000/users/${authUser.email}/${document_name}`)
+      .delete(`http://localhost:8000/users/${authUser.email}/${document_name}/`)
       .then((res) => {
         getData();
         toast.success("Document Deleted Successfully!");
@@ -51,7 +51,7 @@ const VersionControl = ({
     console.log(document_name, version, v);
     axios
       .delete(
-        `http://localhost:8000/users/${authUser.email}/${document_name}/${v}`
+        `http://localhost:8000/users/${authUser.email}/${document_name}/${v}/`
       )
       .then((res) => {
         getData();
