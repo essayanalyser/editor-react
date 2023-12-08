@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 
 import { auth } from "../../../config/Firebase";
-import axios from "axios"
+import app_api from "../../../config/ApiConfig";
 
 function Signup() {
   const navigate = useNavigate();
@@ -12,7 +12,7 @@ function Signup() {
     name: "",
     email: "",
     pass: "",
-    confPass: ""
+    confPass: "",
   });
 
   const [errorMsg, setErrorMsg] = useState("");
@@ -38,18 +38,15 @@ function Signup() {
       .then(async (res) => {
         setSubmitButtonDisabled(false);
         const user = res.user;
-        console.log(user)
+        console.log(user);
         await updateProfile(user, {
           displayName: values.name,
         });
-        axios.post(
-          `http://localhost:8000/api/users/`,
-          {
-            title: values.email,
-            version:"0",
-            content: "Hey there!"
-          }
-        )
+        app_api.post(`/api/users/`, {
+          title: values.email,
+          version: "0",
+          content: "Hey there!",
+        });
         navigate("/");
       })
       .catch((err) => {
@@ -100,7 +97,11 @@ function Signup() {
 
       <div className="auth-footer">
         <b className="error">{errorMsg}</b>
-        <button className="application-button" onClick={e=>handleSubmission(e)} disabled={submitButtonDisabled}>
+        <button
+          className="application-button"
+          onClick={(e) => handleSubmission(e)}
+          disabled={submitButtonDisabled}
+        >
           Signup
         </button>
         <p>

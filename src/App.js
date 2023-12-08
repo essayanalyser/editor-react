@@ -12,9 +12,9 @@ import "./stylesheets/home.css";
 import { Route as Link, Routes, useNavigate } from "react-router-dom";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./config/Firebase";
-import axios from "axios";
 import VersionControl from "./components/VersionControl/VersionControl";
 import toast from "react-hot-toast";
+import app_api from "./config/ApiConfig";
 
 function App() {
   // Initialize navigation
@@ -40,8 +40,8 @@ function App() {
   // Function to get data
   const getData = () => {
     if (authUser) {
-      axios
-        .get(`http://localhost:8000/users/${authUser.email}/`)
+      app_api
+        .get(`users/${authUser.email}/`)
         .then((res) => {
           setDocData(res.data);
           console.log(res.data);
@@ -87,7 +87,7 @@ function App() {
       toast.error("Please enter a document name");
     } else {
       try {
-        const { data } = await axios.post(`http://localhost:8000/users/`, {
+        await app_api.post(`users/`, {
           key: authUser.email,
           doc_name: docName,
           data: {
