@@ -9,13 +9,14 @@ const Accordion = ({
   activeVersion,
   setActiveVersion,
   docName,
-  deleteDoc,
-  deleteVersion,
+  // deleteDoc,
+  setToDelete,
+  setShowDeleteModal,
 }) => {
   // State for accordion open status
   const [isOpen, setIsOpen] = useState(false);
 
-  const [isHovered, setIsHovered] = useState(false);
+  // const [isHovered, setIsHovered] = useState(false);x
   const [versionHovered, setVersionHovered] = useState(-1);
 
   // Effect to set open status based on doc name. If doc name matches, open accordion
@@ -45,8 +46,8 @@ const Accordion = ({
           isOpen && "bg-gray-200 bg-opacity-30"
         } transition-colors rounded-lg duration-200 ease-in-out flex items-center justify-between`}
         onClick={() => handleClick()}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
+        // onMouseEnter={() => setIsHovered(true)}
+        // onMouseLeave={() => setIsHovered(false)}
       >
         <div className="flex items-center gap-2">
           <svg
@@ -69,7 +70,7 @@ const Accordion = ({
             {doc.doc_name === "" ? "untitled" : doc.doc_name}
           </span>
         </div>
-        {isHovered ? (
+        {/* {isHovered ? (
           <div
             className="h-6 w-6 flex justify-center items-center hover:bg-gray-200 hover:bg-opacity-10 rounded-full"
             onClick={() => {
@@ -80,7 +81,7 @@ const Accordion = ({
           </div>
         ) : (
           <div className="h-6 w-6" />
-        )}
+        )} */}
       </div>
       {isOpen && (
         <div className="ms-4">
@@ -91,7 +92,9 @@ const Accordion = ({
                 setData(version.content);
                 setActiveVersion(version.version);
               }}
-              className={`py-2 px-4 flex items-center justify-between hover:bg-gray-50 rounded-lg cursor-pointer text-xs hover:bg-opacity-20 transition-colors duration-200 ease-in-out`}
+              className={`py-2 px-4 flex hover:bg-opacity-20 items-center justify-between hover:bg-gray-50 ${
+                activeVersion === version.version && "bg-gray-50 bg-opacity-10"
+              } rounded-lg cursor-pointer text-xs  transition-colors duration-200 ease-in-out`}
               onMouseEnter={() => setVersionHovered(i)}
               onMouseLeave={() => setVersionHovered(-1)}
             >
@@ -100,7 +103,11 @@ const Accordion = ({
                 <div
                   className="h-6 w-6 flex justify-center items-center hover:bg-gray-200 hover:bg-opacity-10 rounded-full"
                   onClick={() => {
-                    deleteVersion(doc.doc_name, version.version);
+                    setShowDeleteModal(true);
+                    setToDelete({
+                      doc_name: doc.doc_name,
+                      version: version.version,
+                    });
                   }}
                 >
                   <DeleteOutlined />

@@ -4,9 +4,9 @@ import Logo from "../../assets/logo.svg";
 import NewDocModal from "../modal/NewDocModal";
 import Accordion from "./Accordion";
 import { FolderAddOutlined, UserOutlined } from "@ant-design/icons";
-import axios from "axios";
 import toast from "react-hot-toast";
 import app_api from "../../config/ApiConfig";
+import DeleteVersionModal from "../modal/DeleteVersionModal";
 
 const VersionControl = ({
   activeVersion,
@@ -31,44 +31,46 @@ const VersionControl = ({
     setShowNewDocModal(true);
   };
 
-  const deleteDoc = (document_name) => {
-    app_api
-      .delete(`/users/${authUser.email}/${document_name}`)
-      .then((res) => {
-        getData();
-        toast.success("Document Deleted Successfully!");
-        setCurrentDoc(null);
-        setDocName("");
-        setData([]);
-        setDocData([]);
-      })
-      .catch((err) => toast.error(err.message));
-  };
+  // const deleteDoc = (document_name) => {
+  //   app_api
+  //     .delete(`/users/${authUser.email}/${document_name}`)
+  //     .then((res) => {
+  //       getData();
+  //       toast.success("Document Deleted Successfully!");
+  //       setCurrentDoc(null);
+  //       setDocName("");
+  //       setData([]);
+  //       setDocData([]);
+  //     })
+  //     .catch((err) => toast.error(err.message));
+  // };
+
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [toDelete, setToDelete] = useState({
+    doc_name: "",
+    version: "",
+  });
 
   const deleteVersion = (document_name, version) => {
     let v = parseInt(version);
-    console.log(document_name, version, v);
+    const d = docData.filter((doc) => doc.doc_name === document_name)[0];
+    if (d.versions.length === 1) {
+      setCurrentDoc(null);
+      setDocName("");
+      setActiveVersion("");
+      setData([]);
+    } else {
+      setCurrentDoc(d);
+      setDocName(d.doc_name);
+      const av = String(d.versions.length - 2);
+      setActiveVersion(av);
+      setData(d.versions[av].content);
+    }
     app_api
       .delete(`users/${authUser.email}/${document_name}/${v}`)
       .then((res) => {
         getData();
         toast.success("Version Deleted Successfully!");
-        const d = docData.filter((doc) => doc.doc_name === document_name);
-        if (version === 0) {
-          if (d.versions.length !== 0) {
-            setCurrentDoc(d);
-            setDocName(d.doc_name);
-            setActiveVersion(d.versions[1]);
-            setData(d.versions[1].content);
-            setDocData(d.versions[1].content);
-          }
-        } else {
-          setCurrentDoc(d);
-          setDocName(d.doc_name);
-          setActiveVersion(d.versions[0]);
-          setData(d.versions[0].content);
-          setDocData(d.versions[0].content);
-        }
       })
       .catch((err) => toast.error(err.message));
   };
@@ -80,7 +82,7 @@ const VersionControl = ({
         <div className="text-white text-2xl font-bold">Analyser</div>
       </div>
       <div className="text-xs font-bold text-gray-500 mt-4">Documents</div>
-      <div className="flex h-full mb-4 flex-col gap-1 text-sm text-white overflow-y-auto hideScroll">
+      <div className="flex h-full my-4 flex-col gap-1 text-sm text-white overflow-y-auto hideScroll">
         {docData?.map((doc, index) => (
           <Accordion
             key={index}
@@ -91,8 +93,9 @@ const VersionControl = ({
             activeVersion={activeVersion}
             setActiveVersion={setActiveVersion}
             docName={currentDoc?.doc_name}
-            deleteDoc={deleteDoc}
-            deleteVersion={deleteVersion}
+            // deleteDoc={deleteDoc}
+            setToDelete={setToDelete}
+            setShowDeleteModal={setShowDeleteModal}
           />
         ))}
       </div>
@@ -133,6 +136,14 @@ const VersionControl = ({
           setDocName={setDocName}
           setDocData={setDocData}
           setData={setData}
+        />
+      )}
+      {showDeleteModal && (
+        <DeleteVersionModal
+          setShowDeleteModal={setShowDeleteModal}
+          toDelete={toDelete}
+          setToDelete={setToDelete}
+          deleteVersion={deleteVersion}
         />
       )}
     </div>
