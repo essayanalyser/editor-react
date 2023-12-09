@@ -134,6 +134,13 @@ function App() {
     return unsubscribe;
   }, []);
 
+  useEffect(() => {
+    if (!authUser) {
+      setLoading(false);
+    }
+  }, [authUser]);
+
+
   return (
     <Routes>
       <Link

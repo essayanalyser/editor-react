@@ -114,19 +114,21 @@ const VersionControl = ({
         <div className="w-[80%] h-full flex items-center">New Doc</div>
       </div>
       <div className="flex items-center justify-between mt-5 h-12 w-full">
-        <div className="w-32 text-xs truncate text-white">
-          {authUser?.email?.split("@")[0]}
-        </div>
         {JSON.parse(localStorage.getItem("isLoggedIn")) || authUser ? (
-          <div
-            className="w-12 h-12 rounded-full hover:bg-white hover:bg-opacity-10 text-white flex justify-center items-center cursor-pointer"
-            title={authUser?.displayName}
-            onClick={() => navigate("/auth")}
-          >
-            <UserOutlined />
-          </div>
+          <>
+            <div className="w-32 text-xs truncate text-white">
+              {authUser?.email?.split("@")[0]}
+            </div>
+            <div
+              className="w-12 h-12 rounded-full hover:bg-white hover:bg-opacity-10 text-white flex justify-center items-center cursor-pointer"
+              title={authUser?.displayName}
+              onClick={() => navigate("/auth")}
+            >
+              <UserOutlined />
+            </div>
+          </>
         ) : (
-          <div className="w-full justify-between flex items-center">
+          <div className="w-full px-2 text-white justify-between flex items-center">
             <Link to="/auth/login">Login</Link>
             <Link to="/auth/signup">Signup</Link>
           </div>
