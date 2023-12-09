@@ -47,11 +47,23 @@ function App() {
           console.log(res.data);
           if (docName !== "") {
             let doc = res.data.find((doc) => doc.doc_name === docName);
-            setCurrentDoc(doc);
-            setDocName(doc.doc_name);
-            const av = String(doc.versions.length - 1);
-            setActiveVersion(av);
-            setData(doc.versions[av].content);
+            if (doc) {
+              setCurrentDoc(doc);
+              setDocName(doc.doc_name);
+              const av = String(doc.versions.length - 1);
+              setActiveVersion(av);
+              setData(doc.versions[av].content);
+            } else {
+              setCurrentDoc(null);
+              setDocName("");
+              setActiveVersion("0");
+              setData([]);
+            }
+          } else {
+            setCurrentDoc(null);
+            setDocName("");
+            setActiveVersion("0");
+            setData([]);
           }
         })
         .catch((err) => {
