@@ -32,14 +32,14 @@ const Accordion = ({
     if (isOpen) {
       setCurrentDoc(null);
       setDocName("");
-      activeVersion("");
+      setActiveVersion("");
       setData([]);
     } else {
       setCurrentDoc(doc);
       setDocName(doc.doc_name);
-     const av = String(doc.versions.length - 1);
-     setActiveVersion(av);
-     setData(doc.versions[av].content);
+      const av = doc.versions.length - 1;
+      setActiveVersion(String(av));
+      setData(doc.versions[av].content);
     }
     setIsOpen(!isOpen);
   };
@@ -95,10 +95,10 @@ const Accordion = ({
               key={i}
               onClick={() => {
                 setData(version.content);
-                setActiveVersion(version.version);
+                setActiveVersion(String(doc.versions.indexOf(version)));
               }}
               className={`py-2 px-4 flex hover:bg-opacity-20 items-center justify-between hover:bg-gray-50 ${
-                activeVersion === i && "bg-gray-50 bg-opacity-10"
+                activeVersion === i.toString() && "bg-gray-50 bg-opacity-10"
               } rounded-lg cursor-pointer text-xs  transition-colors duration-200 ease-in-out`}
               onMouseEnter={() => setVersionHovered(i)}
               onMouseLeave={() => setVersionHovered(-1)}

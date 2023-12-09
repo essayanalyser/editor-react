@@ -38,13 +38,21 @@ function App() {
   const [activeVersion, setActiveVersion] = useState("0");
 
   // Function to get data
-  const getData = () => {
+  const getData = async () => {
     if (authUser) {
-      app_api
+      await app_api
         .get(`users/${authUser.email}/`)
         .then((res) => {
           setDocData(res.data);
           console.log(res.data);
+          if (docName !== "") {
+            let doc = res.data.find((doc) => doc.doc_name === docName);
+            setCurrentDoc(doc);
+            setDocName(doc.doc_name);
+            const av = String(doc.versions.length - 1);
+            setActiveVersion(av);
+            setData(doc.versions[av].content);
+          }
         })
         .catch((err) => {
           toast.error("Error fetching data", err);
@@ -68,17 +76,6 @@ function App() {
     getData();
   }, [authUser]);
 
-  // Effect to set active version and versions when currentDoc changes
-  useEffect(() => {
-    if (currentDoc?.versions?.length === 0) {
-      setActiveVersion("0");
-      setVersions([]);
-      return;
-    }
-    setActiveVersion(currentDoc?.versions?.length - 1);
-    setVersions(currentDoc?.versions);
-  }, [currentDoc]);
-
   // Function to handle click on Analyse button
   const handleAnalyseButtonClicked = async (typedData) => {
     if (!authUser) {
@@ -95,15 +92,6 @@ function App() {
             content: typedData,
           },
         });
-        const d = docData.filter((doc) => doc.doc_name === docName)[0];
-        setCurrentDoc(d);
-        setDocName(d.doc_name);
-        if (d.versions.length === 0) {
-          setActiveVersion("0");
-        } else {
-          const av = String(d.versions.length - 1);
-          setActiveVersion(av);
-        }
         toast.success("Data saved successfully");
       } catch (error) {
         toast.error("Error saving data", error);
