@@ -20,6 +20,7 @@ const VersionControl = ({
   setData,
   setDocData,
   getData,
+  setLoading,
 }) => {
   const navigate = useNavigate();
 
@@ -52,6 +53,7 @@ const VersionControl = ({
   });
 
   const deleteVersion = (document_name, version) => {
+    setLoading(true);
     let v = parseInt(version);
     const d = docData.filter((doc) => doc.doc_name === document_name)[0];
     if (d.versions.length === 1) {
@@ -72,7 +74,8 @@ const VersionControl = ({
         getData();
         toast.success("Version Deleted Successfully!");
       })
-      .catch((err) => toast.error(err.message));
+      .catch((err) => toast.error(err.message))
+      .finally(() => setLoading(false));
   };
 
   return (

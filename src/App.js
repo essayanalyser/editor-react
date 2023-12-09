@@ -20,6 +20,8 @@ function App() {
   // Initialize navigation
   const navigate = useNavigate();
 
+  const [loading, setLoading] = useState(false);
+
   // State for authenticated user
   const [authUser, setAuthUser] = useState(null);
 
@@ -39,6 +41,7 @@ function App() {
 
   // Function to get data
   const getData = async () => {
+    setLoading(true);
     if (authUser) {
       await app_api
         .get(`users/${authUser.email}/`)
@@ -68,6 +71,9 @@ function App() {
         })
         .catch((err) => {
           toast.error("Error fetching data", err);
+        })
+        .finally(() => {
+          setLoading(false);
         });
     }
   };
@@ -90,6 +96,7 @@ function App() {
 
   // Function to handle click on Analyse button
   const handleAnalyseButtonClicked = async (typedData) => {
+    setLoading(true);
     if (!authUser) {
       navigate("/auth");
     } else if (docName === "" || currentDoc === null) {
@@ -110,6 +117,7 @@ function App() {
       }
     }
     getData();
+    setLoading(false);
   };
 
   // Effect to handle authentication state
@@ -123,7 +131,6 @@ function App() {
         localStorage.setItem("isLoggedIn", false);
       }
     });
-
     return unsubscribe;
   }, []);
 
@@ -136,6 +143,13 @@ function App() {
             id="home"
             className="h-screen font-pops w-screen overflow-hidden bg-[#141718] flex"
           >
+            {/* Loading screen */}
+            {loading && (
+              <div className="fixed top-0 left-0 z-50 w-screen h-screen bg-black bg-opacity-10 flex items-center justify-center">
+                <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-gray-900"></div>
+              </div>
+            )}
+            {/* Home screen */}
             <div className="h-screen w-screen overflow-hidden flex">
               <VersionControl
                 activeVersion={activeVersion || "0"}
@@ -149,6 +163,7 @@ function App() {
                 setData={setData}
                 setDocData={setDocData}
                 getData={getData}
+                setLoading={setLoading}
               />
               <div className="px-4 py-4 w-full h-full">
                 <div className="rounded-lg bg-white flex h-full w-full">
