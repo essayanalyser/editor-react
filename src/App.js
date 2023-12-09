@@ -95,6 +95,15 @@ function App() {
             content: typedData,
           },
         });
+        const d = docData.filter((doc) => doc.doc_name === docName)[0];
+        setCurrentDoc(d);
+        setDocName(d.doc_name);
+        if (d.versions.length === 0) {
+          setActiveVersion("0");
+        } else {
+          const av = String(d.versions.length - 1);
+          setActiveVersion(av);
+        }
         toast.success("Data saved successfully");
       } catch (error) {
         toast.error("Error saving data", error);
