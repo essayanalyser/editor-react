@@ -11,7 +11,6 @@ import DeleteVersionModal from "../modal/DeleteVersionModal";
 const VersionControl = ({
   activeVersion,
   setActiveVersion,
-  versions,
   authUser,
   docData,
   currentDoc,

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from "react";
 import {
   Editor,
   Statistics,
@@ -36,11 +36,11 @@ function App() {
   const [currentDoc, setCurrentDoc] = useState(null);
 
   // State for versions
-  const [versions, setVersions] = useState([]);
+  const versions = [];
   const [activeVersion, setActiveVersion] = useState("0");
 
   // Function to get data
-  const getData = async () => {
+  const getData = useCallback(async () => {
     setLoading(true);
     if (authUser) {
       await app_api
@@ -76,7 +76,7 @@ function App() {
           setLoading(false);
         });
     }
-  };
+  }, [authUser, docName]);
 
   // Function to get new version ID in the current document
   const getNewVersionID = () => {
@@ -91,8 +91,12 @@ function App() {
 
   // Effect to get data when authUser changes
   useEffect(() => {
-    getData();
-  }, [authUser]);
+    const fetchData = async () => {
+      await getData();
+    };
+
+    fetchData();
+  }, [authUser, getData]);
 
   // Function to handle click on Analyse button
   const handleAnalyseButtonClicked = async (typedData) => {
@@ -140,7 +144,6 @@ function App() {
     }
   }, [authUser]);
 
-
   return (
     <Routes>
       <Link
@@ -164,7 +167,6 @@ function App() {
                 docData={docData || []}
                 currentDoc={currentDoc || null}
                 setCurrentDoc={setCurrentDoc || null}
-                versions={versions || []}
                 authUser={authUser || null}
                 setDocName={setDocName}
                 setData={setData}
