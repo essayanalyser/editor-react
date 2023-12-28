@@ -33,7 +33,7 @@ export default function Editor({
   }, [olderVersionData]);
 
   return (
-    <div className="h-full w-full flex relative justify-center items-center">
+    <div id="editor-wrapper">
       <div className="h-full w-full text-sm flex justify-center items-center">
         <CKEditor
           editor={ClassicEditor}

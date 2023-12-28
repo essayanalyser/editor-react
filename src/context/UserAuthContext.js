@@ -65,7 +65,7 @@ export function UserAuthContextProvider({ children }) {
         return () => {
             unsubscribe();
         };
-    }, []);
+    }, [dispatch]);
 
     return (
         <userAuthContext.Provider value={{ user, logIn, signUp, logOut, googleSignIn }}>

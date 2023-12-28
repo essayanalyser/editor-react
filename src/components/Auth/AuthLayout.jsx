@@ -10,29 +10,28 @@ const AuthLayout = () => {
 
 	const authUser = useSelector(state => state.user.userInfo)
 
+	const normalizedPath = window.location.pathname.replace(/\/+$/, '');
+	const authPaths = ['/auth/login', '/auth/signup', '/auth/reset'].map(path =>
+		path.replace(/\/+$/, '')
+	);
+
 	useEffect(() => {
-		if (window.location.pathname === '/auth') {
+		if (normalizedPath === '/auth') {
 			if (authUser) {
-				navigate('user')
+				return navigate('user');
+			} else {
+				return navigate('signup');
 			}
-			else {
-				navigate('signup');
-			}
-			return;
 		}
 
 		if (authUser) {
-			if (
-				(window.location.pathname === '/auth/login') ||
-				(window.location.pathname === '/auth/signup') ||
-				(window.location.pathname === '/auth/reset')
-			) {
-				navigate('/auth')
+			if (authPaths.includes(normalizedPath)) {
+				navigate('/auth');
 			}
+		} else if (normalizedPath === '/auth/user') {
+			navigate('/auth');
 		}
-		else if (window.location.pathname === '/auth/user') {
-			navigate('/auth')
-		}
+
 	})
 
 	return (

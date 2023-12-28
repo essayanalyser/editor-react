@@ -10,11 +10,15 @@ import {
 } from "./components";
 import "./stylesheets/home.css";
 import { Route as Link, Routes, useNavigate } from "react-router-dom";
-import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "./config/Firebase";
+
+import { AppBar, Box, Drawer, IconButton, Toolbar, Typography } from "@mui/material";
+import MenuIcon from "@mui/icons-material/Menu";
+
 import VersionControl from "./components/VersionControl/VersionControl";
 import toast from "react-hot-toast";
 import app_api from "./config/ApiConfig";
+
+import logo from './assets/logo.svg'
 
 import { useSelector } from "react-redux";
 
@@ -134,6 +138,32 @@ function App() {
 
   }, [authUser]);
 
+  const DrawerWidth = 300
+
+  const [mobileOpen, setMobileOpen] = useState(true);
+
+  const handleDrawerToggle = () => {
+    setMobileOpen(!mobileOpen);
+  };
+
+  const DrawerContent = (
+    <>
+      <VersionControl
+        activeVersion={activeVersion || "0"}
+        setActiveVersion={setActiveVersion || "0"}
+        docData={docData || []}
+        currentDoc={currentDoc || null}
+        setCurrentDoc={setCurrentDoc || null}
+        authUser={authUser || null}
+        setDocName={setDocName}
+        setData={setData}
+        setDocData={setDocData}
+        getData={getData}
+        setLoading={setLoading}
+      />
+    </>
+  )
+
   return (
     <Routes>
       <Link
@@ -150,23 +180,70 @@ function App() {
             )}
             {/* Home screen */}
             <div className="home-wrapper">
-              <div className="version_control-wrapper">
-                <VersionControl
-                  activeVersion={activeVersion || "0"}
-                  setActiveVersion={setActiveVersion || "0"}
-                  docData={docData || []}
-                  currentDoc={currentDoc || null}
-                  setCurrentDoc={setCurrentDoc || null}
-                  authUser={authUser || null}
-                  setDocName={setDocName}
-                  setData={setData}
-                  setDocData={setDocData}
-                  getData={getData}
-                  setLoading={setLoading}
-                />
-              </div>
-              <div className="analyzer-wrapper">
-                <div>
+              <AppBar
+                position="fixed"
+                sx={{
+                  width: '100%',
+                  height: '4rem',
+                  zIndex: 6,
+                  background: 'var(--clr-dark-bg)'
+                }}
+              >
+                <Toolbar>
+                  <IconButton
+                    color="inherit"
+                    aria-label="open drawer"
+                    edge="start"
+                    onClick={handleDrawerToggle}
+                    sx={{ mr: 2, display: { md: "none" } }}
+                  >
+                    <MenuIcon />
+                  </IconButton>
+                  <Typography variant="h6" noWrap component="div">
+                    <div className="flex gap-2 items-center">
+                      <img src={logo} alt="logo" className="h-8 w-8" />
+                      <div className="text-white text-2xl font-bold">Analyser</div>
+                    </div>
+                  </Typography>
+                </Toolbar>
+              </AppBar>
+              <Box
+                sx={{ backgroundColor: 'var(--clr-dark-bg)', width: { md: DrawerWidth }, flexShrink: { md: 0 } }}
+              >
+                <Drawer
+                  container={document.body}
+                  variant="temporary"
+                  open={mobileOpen}
+                  onClose={handleDrawerToggle}
+                  ModalProps={{
+                    keepMounted: true,
+                  }}
+                  sx={{
+                    display: { xs: 'block', md: 'none' },
+                    '& .MuiDrawer-paper': { boxSizing: 'border-box', width: DrawerWidth },
+                  }}
+                >
+                  {DrawerContent}
+                </Drawer>
+                <Drawer
+                  variant="permanent"
+                  sx={{
+                    display: { xs: 'none', md: 'block' },
+                    '& .MuiDrawer-paper': { boxSizing: 'border-box', width: DrawerWidth },
+                  }}
+                  open
+                >
+                  {DrawerContent}
+                </Drawer>
+              </Box>
+              <Box
+                sx={{
+                  flexGrow: 1,
+                  p: 3,
+                  width: { md: `calc(100% - ${DrawerWidth}px)` },
+                }}
+              >
+                <div className="analyzer-wrapper">
                   <Editor
                     handleAnalyseButtonClicked={handleAnalyseButtonClicked}
                     authUser={authUser}
@@ -174,19 +251,19 @@ function App() {
                   />
                   <Statistics authUser={authUser} data={data} />
                 </div>
-              </div>
+              </Box>
             </div>
           </div>
         }
       />
 
-      <Link exact path="auth" element={<AuthLayout authUser={authUser} />}>
+      <Link Link exact path="auth" element={< AuthLayout authUser={authUser} />}>
         <Link path="login" element={<Login />} />
         <Link path="signup" element={<Signup />} />
         <Link path="user" element={<UserPage authUser={authUser} />} />
         <Link path="reset" element={<ResetPass />} />
-      </Link>
-    </Routes>
+      </Link >
+    </Routes >
   );
 }
 

@@ -3,57 +3,76 @@
 
     display: flex;
     flex-wrap: wrap;
-    
+
     height: 100vh;
     width: 100vw;
 
     overflow: hidden;
 
-    background-color: #141718;
+    background-color: var(--clr-dark-bg);
 }
 
 .home-wrapper {
     display: flex;
-    
+
     width: 100%;
     overflow: hidden;
 }
-
-.version_control-wrapper {
-    width: 20%;
-    height: 100%;
-    
-    background-color: #141718;
-    
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    
-    padding: 1.5rem 1rem;
-    
-    position: relative;
-
-    z-index: 5;
+.css-4t3x6l-MuiPaper-root-MuiDrawer-paper,
+.css-12i7wg6-MuiPaper-root-MuiDrawer-paper {
+    padding: 1.5rem 1rem !important;
+    background-color: var(--clr-dark-bg) !important;
 }
 
 .analyzer-wrapper {
-    padding: 1rem;
-    width: 80%;
-    height: 100%;
-}
-
-.analyzer-wrapper > div {
     display: flex;
-    
+
+    flex-wrap: wrap;
+
     background-color: white;
-    
+
     width: 100%;
-    height: 100%;
-    
+    height: calc(100% - 4rem);
+
+    margin-top: 4rem;
+
     border-radius: 0.5rem;
 }
 
+#editor-wrapper {
+    width: 70%;
 
-@media (max-width: 1200px) {
+    display: flex;
+    position: relative;
+    justify-content: center;
+    align-items: center;
+}
 
+#statistics-wrapper {
+    width: 30%;
+}
+
+@media (max-width: 1300px) {
+    .css-14v3m06,
+    .css-lsfs9q {
+        padding: 0.5rem !important;
+    }
+
+    .analyzer-wrapper {
+        overflow-y: scroll !important;
+        height: 90vh;
+    }
+
+    #editor-wrapper,
+    #statistics-wrapper {
+        width: 100%;
+    }
+
+    #editor-wrapper {
+        height: 30rem;
+    }
+
+    #statistics-wrapper {
+        height: 30rem;
+    }
 }

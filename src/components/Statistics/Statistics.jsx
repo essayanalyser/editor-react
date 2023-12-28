@@ -117,7 +117,7 @@ const Statistics = ({ authUser, data }) => {
   }, [data, authUser]);
 
   return (
-    <div className="h-full w-1/2 bg-gray-50 border-l-[1px] border-gray-300 overflow-hidden px-3 py-6">
+    <div id="statistics-wrapper" className="bg-gray-50 border-l-[1px] border-gray-300 overflow-hidden px-3 py-6">
       {data.length === 0 ? (
         <div className="h-full w-full flex justify-center items-center">
           <Empty description="Select any version" />

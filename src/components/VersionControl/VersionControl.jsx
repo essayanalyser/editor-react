@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import Logo from "../../assets/logo.svg";
+import logo from "../../assets/logo.svg";
 import NewDocModal from "../modal/NewDocModal";
 import Accordion from "./Accordion";
 import { FolderAddOutlined, UserOutlined } from "@ant-design/icons";
@@ -80,7 +80,7 @@ const VersionControl = ({
   return (
     <>
       <div className="flex gap-2 items-center">
-        <img src={Logo} alt="logo" className="h-8 w-8" />
+        <img src={logo} alt="logo" className="h-8 w-8" />
         <div className="text-white text-2xl font-bold">Analyser</div>
       </div>
       <div className="text-xs font-bold text-gray-500 mt-4">Documents</div>
@@ -113,12 +113,14 @@ const VersionControl = ({
         <div className="w-[80%] h-full flex items-center">New Doc</div>
       </div>
       <div
-        onClick={() => navigate("/auth")}
         className="mt-5 h-12 w-full"
-        title={authUser?.displayName}
       >
         {authUser ? (
-          <div className="flex gap-4 hover:bg-white hover:bg-opacity-20 cursor-pointer rounded">
+          <Link
+            className="flex gap-4 hover:bg-white hover:bg-opacity-20 cursor-pointer rounded"
+            to='auth'
+            title={authUser?.displayName}    
+          >
             <div
               className="text-white flex justify-center items-center"
             >
@@ -129,7 +131,7 @@ const VersionControl = ({
             <div className="truncate text-white flex items-center">
               {authUser?.displayName}
             </div>
-          </div>
+          </Link>
         ) : (
           <div className="w-full px-2 text-white flex justify-evenly items-center">
             <Link to="/auth/login">
