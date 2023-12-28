@@ -20,7 +20,15 @@
 }
 
 .auth-wrapper {
-    width: 25rem;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    width: 24rem;
+}
+
+.auth-cards {
+    width: 100%;
 
     background-color: #fff;
 
@@ -34,15 +42,17 @@
     gap: 1.5rem;
 }
 
-.auth-wrapper input {
+.auth-form input {
     padding: 10px 5px;
     outline: none;
-    border: 1px solid black;
+    border: 1px solid rgb(140, 140, 140);
+
+    border-radius: 10px;
 }
 
-.auth-wrapper input:focus {
+.auth-form input:focus {
     box-shadow: rgba(0, 0, 0, 0.24) 0px 0px 12px;
-    border: 1px solid black;
+    border: 1px solid rgb(66, 66, 66);
 }
 
 @media (max-width: 600px) {
@@ -57,12 +67,6 @@
     }
 }
 
-.auth-footer {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-
 b.error {
     font-weight: bold;
     font-size: 0.875rem;
@@ -74,28 +78,12 @@ b.error {
     color: green;
 }
 
-.auth-footer {
-    text-align: end;
+.userProfileImg {
+    border-radius: 50%;
 }
 
-.auth-footer button:disabled {
-    background-color: gray !important;
-}
-
-.auth-footer p {
-    font-weight: 700;
-    color: #000;
-    text-align: start;
-}
-
-.auth-footer p span a {
-    font-weight: bold;
-    color: var(--clr-blue2);
-    letter-spacing: 1px;
-    font-size: 1rem;
-    text-decoration: none;
-}
-
-.auth-footer p span a:hover {
-    text-decoration: underline;
+.userAccordianWrapper {
+    display: flex;
+    justify-content: center;
+    width: 100%;
 }

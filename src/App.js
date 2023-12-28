@@ -16,6 +16,8 @@ import VersionControl from "./components/VersionControl/VersionControl";
 import toast from "react-hot-toast";
 import app_api from "./config/ApiConfig";
 
+import { useSelector } from "react-redux";
+
 function App() {
   // Initialize navigation
   const navigate = useNavigate();
@@ -23,7 +25,7 @@ function App() {
   const [loading, setLoading] = useState(false);
 
   // State for authenticated user
-  const [authUser, setAuthUser] = useState(null);
+  const authUser = useSelector(state => state.user.userInfo)
 
   // State for data that is used the statistics and editor component
   const [data, setData] = useState([]);
@@ -124,24 +126,12 @@ function App() {
     setLoading(false);
   };
 
-  // Effect to handle authentication state
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setAuthUser(user);
-        localStorage.setItem("isLoggedIn", true);
-      } else {
-        setAuthUser(null);
-        localStorage.setItem("isLoggedIn", false);
-      }
-    });
-    return unsubscribe;
-  }, []);
-
   useEffect(() => {
     if (!authUser) {
       setLoading(false);
     }
+    console.log("Authuser: ", authUser)
+
   }, [authUser]);
 
   return (
@@ -151,7 +141,6 @@ function App() {
         element={
           <div
             id="home"
-            className="h-screen font-pops w-screen overflow-hidden bg-[#141718] flex"
           >
             {/* Loading screen */}
             {loading && (
@@ -160,22 +149,24 @@ function App() {
               </div>
             )}
             {/* Home screen */}
-            <div className="h-screen w-screen overflow-hidden flex">
-              <VersionControl
-                activeVersion={activeVersion || "0"}
-                setActiveVersion={setActiveVersion || "0"}
-                docData={docData || []}
-                currentDoc={currentDoc || null}
-                setCurrentDoc={setCurrentDoc || null}
-                authUser={authUser || null}
-                setDocName={setDocName}
-                setData={setData}
-                setDocData={setDocData}
-                getData={getData}
-                setLoading={setLoading}
-              />
-              <div className="px-4 py-4 w-full h-full">
-                <div className="rounded-lg bg-white flex h-full w-full">
+            <div className="home-wrapper">
+              <div className="version_control-wrapper">
+                <VersionControl
+                  activeVersion={activeVersion || "0"}
+                  setActiveVersion={setActiveVersion || "0"}
+                  docData={docData || []}
+                  currentDoc={currentDoc || null}
+                  setCurrentDoc={setCurrentDoc || null}
+                  authUser={authUser || null}
+                  setDocName={setDocName}
+                  setData={setData}
+                  setDocData={setDocData}
+                  getData={getData}
+                  setLoading={setLoading}
+                />
+              </div>
+              <div className="analyzer-wrapper">
+                <div>
                   <Editor
                     handleAnalyseButtonClicked={handleAnalyseButtonClicked}
                     authUser={authUser}

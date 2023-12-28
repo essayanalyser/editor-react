@@ -1,27 +1,48 @@
-import { signOut } from 'firebase/auth'
 import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { auth } from './../../../config/Firebase'
 
-const User = ({ authUser }) => {
-    const navigate = useNavigate()
+import { useSelector } from 'react-redux'
+
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+
+import { useUserAuth } from '../../../context/UserAuthContext'
+
+const User = () => {
+    const user = useSelector(state => state.user.userInfo);
+
+    const { logOut } = useUserAuth();
 
     const [message, setMessage] = useState()
 
-    const handleLogout = () => {
-        signOut(auth).then(() => {
-            setMessage({msg: "Logged Out Successfully!", isErr: false})
-            navigate('/')
-        }).catch(err => setMessage({ msg: err, isErr: true }))
+    const handleLogout = async () => {
+        try {
+            await logOut()
+            setMessage({ msg: "Logged Out Successfully!", isErr: false })
+            window.location.pathname = "/";
+        } catch (err) {
+            console.log(err)
+            setMessage({ msg: err.message, isErr: true })
+        }
     }
 
     return (
-        <div className='auth-wrapper'>
-            <p>Name: {authUser?.displayName}</p>
-            <p>Email: {authUser?.email}</p>
+        <div className="auth-wrapper">
+            <div className='auth-cards'>
+				{
+                    (user && user.photoURL)
+                    ? <img className="userProfileImg w-36 self-center" src={user.photoURL} alt='user profile img' title={user.name} />
+                    : <div className="userAccordianWrapper">
+                        <AccountCircleIcon  style={{fontSize: 100}} />
+                    </div>
+                }
 
-            <b className={`error${!message?.isErr && ' clr-green'}`}>{message}</b>
-            <button className="application-button" onClick={handleLogout}>Logout</button>
+                <p><span className='text-xl underline'>Name:</span> {user?.displayName}</p>
+                <p><span className='text-xl underline'>Email:</span> {user?.email}</p>
+
+                <b className={`error${!message?.isErr && ' clr-green'}`}>{message?.msg}</b>
+            </div>
+            <div className="auth-cards">
+                <button className="application-button" onClick={handleLogout}>Logout</button>
+            </div>
         </div>
     )
 }

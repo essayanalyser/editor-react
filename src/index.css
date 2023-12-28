@@ -4,18 +4,143 @@
 @tailwind utilities;
 
 .hideScroll::-webkit-scrollbar {
-    display: none;
+  display: none;
 }
 
 /* Hide scrollbar for IE, Edge and Firefox */
 .hideScroll {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
 }
 
 summary {
   list-style: none;
 }
+
 summary::-webkit-details-marker {
   display: none;
+}
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  outline: 0;
+
+  box-sizing: inherit;
+}
+
+:root {
+  --bs-gutter-x: 0;
+  --bs-gutter-y: 0;
+
+
+  /* colors */
+
+  --clr-grey: hsla(0, 0%, 100%, .507);
+
+  --clr-application-main: dodgerblue;
+  --clr-application-main2: rgb(57, 135, 212);
+  --clr-application-main-blur: rgba(30, 143, 255, 0.528);
+  --clr-application-black: #141718;
+
+  /* light mode themes */
+  --clr-light-bg: white;
+  --clr-light-theme: dodgerblue;
+
+  /* dark mode themes */
+  --clr-dark-bg: #141718;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  background-color: var(--clr-light-bg);
+}
+
+*::selection {
+  background-color: var(--clr-light-theme);
+  color: white;
+}
+
+html {
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+
+button {
+  /* border: none; */
+  background: none;
+  cursor: pointer;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+ul {
+  list-style-type: none;
+}
+
+.application-button {
+  border-radius: 5px;
+  
+  padding: 0.5rem 0.3rem;
+
+  background-color: dodgerblue;
+  color: white;
+}
+
+.application-button:hover {
+  background-color: rgb(3, 109, 215);
+  color: white;
+}
+
+.hide,
+.hide>* {
+    display: none;
+}
+
+.heading {
+  color: inherit;
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+.color-application {
+  color: var(--clr-application-main) !important;
+}
+
+.back-button {
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  margin: 1.5rem;
+  padding: 0.6em 2em;
+
+  border: none;
+  outline: none;
+
+  color: rgb(255, 255, 255);
+  background: #111;
+
+  cursor: pointer;
+
+  /* z-index: 0; */
+  border-radius: 10px;
+
+  -webkit-user-select: none;
+  user-select: none;
+
+  touch-action: manipulation;
 }

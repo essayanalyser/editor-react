@@ -1,74 +1,102 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { signInWithEmailAndPassword } from "firebase/auth";
 
-import { auth } from "../../../config/Firebase";
+import { useUserAuth } from "../../../context/UserAuthContext";
+
+import GoogleButton from "react-google-button";
+
+import removeFirebasePrefix from './../../../utility/removeFirebasePrefix'
 
 function Login() {
-  const navigate = useNavigate();
-  const [values, setValues] = useState({
-    email: "",
-    pass: "",
-  });
-  const [errorMsg, setErrorMsg] = useState("");
-  const [submitButtonDisabled, setSubmitButtonDisabled] = useState(false);
+    const navigate = useNavigate();
 
-  const handleSubmission = () => {
-    if (!values.email || !values.pass) {
-      setErrorMsg("Fill all fields");
-      return;
+    const [values, setValues] = useState({
+        email: "",
+        pass: "",
+    });
+
+    const [errorMsg, setErrorMsg] = useState("");
+    const [submitButtonDisabled, setSubmitButtonDisabled] = useState(false);
+
+    const { logIn, googleSignIn } = useUserAuth();
+
+    const handleGoogleSignIn = async (e) => {
+        e.preventDefault()
+
+        try {
+            await googleSignIn()
+            navigate("/")
+        } catch (err) {
+            setErrorMsg(removeFirebasePrefix(err.message))
+            setSubmitButtonDisabled(false)
+        }
     }
-    setErrorMsg("");
 
-    setSubmitButtonDisabled(true);
-    signInWithEmailAndPassword(auth, values.email, values.pass)
-      .then(async (res) => {
-        setSubmitButtonDisabled(false);
+    const handleSubmission = async (e) => {
+        e.preventDefault()
 
-        navigate("/");
-      })
-      .catch((err) => {
-        setSubmitButtonDisabled(false);
-        setErrorMsg(err.message);
-      });
-  };
-  return (
-    <div className="auth-wrapper">
-      <p className="heading">Login</p>
-
-      <input
-        label="Email"
-        value={values.email}
-        onChange={(event) =>
-          setValues((prev) => ({ ...prev, email: event.target.value }))
+        if (!values.email || !values.pass) {
+            setErrorMsg("Fill all fields");
+            return;
         }
-        placeholder="Enter email address"
-      />
-      <input
-        label="Password"
-        type="password"
-        value={values.pass}
-        onChange={(event) =>
-          setValues((prev) => ({ ...prev, pass: event.target.value }))
-        }
-        placeholder="Enter Password"
-      />
+        setErrorMsg("");
 
-      <div className="auth-footer">
-        <Link to='/auth/reset'>Forgot password?</Link>
-        <b className="error">{errorMsg}</b>
-        <button className="application-button" disabled={submitButtonDisabled} onClick={handleSubmission}>
-          Login
-        </button>
-        <p>
-          Don't have an account?{" "}
-          <span>
-            <Link to="/auth/signup">Sign up</Link>
-          </span>
-        </p>
-      </div>
-    </div>
-  );
+        setSubmitButtonDisabled(true);
+
+        try {
+            await logIn(values.email, values.pass)
+            navigate("/")
+        } catch (err) {
+            setErrorMsg(removeFirebasePrefix(err.message))
+            setSubmitButtonDisabled(false)
+        }
+    };
+
+    return (
+        <div className="auth-wrapper">
+            <div className="auth-cards">
+                <p className="heading">Login</p>
+                <form onSubmit={handleSubmission} className="auth-form flex flex-col gap-4">
+                    <input
+                        label="Email"
+                        value={values.email}
+                        autoFocus
+                        onChange={(event) =>
+                            setValues((prev) => ({ ...prev, email: event.target.value }))
+                        }
+                        placeholder="Enter email address"
+                    />
+                    <input
+                        label="Password"
+                        type="password"
+                        value={values.pass}
+                        onChange={(event) =>
+                            setValues((prev) => ({ ...prev, pass: event.target.value }))
+                        }
+                        placeholder="Enter Password"
+                    />
+                    <div className="-mt-4 justify-end flex">
+                        <Link className="hover:underline cursor-pointer" to='/auth/reset'>Forgot password?</Link>
+                    </div>
+
+                    <b className="error">{errorMsg}</b>
+                    <button className="application-button auth-btn" disabled={submitButtonDisabled} onClick={handleSubmission}>
+                        Login
+                    </button>
+                    <hr className="my-6" />
+                    <GoogleButton className="m-auto mb-4" onClick={handleGoogleSignIn} />
+                </form>
+            </div>
+            <div className="auth-cards">
+                <p>
+                    Don't have an account?{" "}
+                    <span className="underline">
+                        <Link to="/auth/signup">Sign up</Link>
+                    </span>
+                </p>
+            </div>
+        </div>
+    );
 }
 
 export default Login;

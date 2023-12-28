@@ -78,7 +78,7 @@ const VersionControl = ({
   };
 
   return (
-    <div className="h-screen w-1/4 flex flex-col justify-between px-4 py-6">
+    <>
       <div className="flex gap-2 items-center">
         <img src={Logo} alt="logo" className="h-8 w-8" />
         <div className="text-white text-2xl font-bold">Analyser</div>
@@ -112,24 +112,36 @@ const VersionControl = ({
         </div>
         <div className="w-[80%] h-full flex items-center">New Doc</div>
       </div>
-      <div className="flex items-center justify-between mt-5 h-12 w-full">
-        {JSON.parse(localStorage.getItem("isLoggedIn")) || authUser ? (
-          <>
-            <div className="w-32 text-xs truncate text-white">
-              {authUser?.email?.split("@")[0]}
-            </div>
+      <div
+        onClick={() => navigate("/auth")}
+        className="mt-5 h-12 w-full"
+        title={authUser?.displayName}
+      >
+        {authUser ? (
+          <div className="flex gap-4 hover:bg-white hover:bg-opacity-20 cursor-pointer rounded">
             <div
-              className="w-12 h-12 rounded-full hover:bg-white hover:bg-opacity-10 text-white flex justify-center items-center cursor-pointer"
-              title={authUser?.displayName}
-              onClick={() => navigate("/auth")}
+              className="text-white flex justify-center items-center"
             >
-              <UserOutlined />
+              <div className="w-12 h-12 rounded-full bg-white bg-opacity-10 cursor-pointer flex justify-center items-center">
+                <UserOutlined />
+              </div>
             </div>
-          </>
+            <div className="truncate text-white flex items-center">
+              {authUser?.displayName}
+            </div>
+          </div>
         ) : (
-          <div className="w-full px-2 text-white justify-between flex items-center">
-            <Link to="/auth/login">Login</Link>
-            <Link to="/auth/signup">Signup</Link>
+          <div className="w-full px-2 text-white flex justify-evenly items-center">
+            <Link to="/auth/login">
+              <div className="hover:text-gray-300 border-[1px] border-gray-100 border-opacity-20 py-2 px-4 rounded cursor-pointer">
+                Login
+              </div>
+            </Link>
+            <Link to="/auth/signup">
+              <div className="hover:bg-white border-[1px] border-white hover:bg-opacity-40 py-2 px-4 rounded cursor-pointer">
+                Sign up
+              </div>
+            </Link>
           </div>
         )}
       </div>
@@ -150,7 +162,7 @@ const VersionControl = ({
           deleteVersion={deleteVersion}
         />
       )}
-    </div>
+    </>
   );
 };
 
