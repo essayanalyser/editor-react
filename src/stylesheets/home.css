@@ -32,7 +32,6 @@
     background-color: white;
 
     width: 100%;
-    height: calc(100% - 4rem);
     height: 100%;
 
     border-radius: 0.5rem;
@@ -71,11 +70,6 @@
         padding: 0.5rem !important;
     }
 
-    .analyzer-wrapper {
-        /* overflow-y: scroll !important; */
-        /* height: 90vh; */
-    }
-
     #editor-wrapper,
     #statistics-wrapper {
         width: 100%;
@@ -98,6 +92,7 @@
 
     .analyzer-wrapper {
         margin-top: 4rem;
+        height: calc(100% - 4rem);
     }
     
 }
