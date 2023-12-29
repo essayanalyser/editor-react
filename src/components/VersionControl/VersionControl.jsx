@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import logo from "../../assets/logo.svg";
 import NewDocModal from "../modal/NewDocModal";
 import Accordion from "./Accordion";
@@ -21,7 +21,6 @@ const VersionControl = ({
   getData,
   setLoading,
 }) => {
-  const navigate = useNavigate();
 
   // State for new document modal visibility
   const [showNewDocModal, setShowNewDocModal] = useState(false);
@@ -102,7 +101,7 @@ const VersionControl = ({
         ))}
       </div>
       <div
-        className="flex items-center justify-center h-16 w-full text-white border-[1px] border-gray-100 border-opacity-20 hover:bg-gray-100 hover:bg-opacity-20 text-xs rounded-md cursor-pointer"
+        className="flex items-center justify-center h-16 w-full text-white border-[1px] border-gray-100 border-opacity-20 hover:bg-gray-100 hover:bg-opacity-20 text-sm rounded-md cursor-pointer"
         onClick={() => {
           newDocButtonHandler();
         }}
@@ -117,15 +116,20 @@ const VersionControl = ({
       >
         {authUser ? (
           <Link
-            className="flex gap-4 hover:bg-white hover:bg-opacity-20 cursor-pointer rounded"
+            className="flex p-1 gap-4 hover:bg-gray-100 hover:bg-opacity-20 cursor-pointer rounded-md"
             to='auth'
-            title={authUser?.displayName}    
+            title={authUser?.displayName}
           >
             <div
               className="text-white flex justify-center items-center"
             >
-              <div className="w-12 h-12 rounded-full bg-white bg-opacity-10 cursor-pointer flex justify-center items-center">
-                <UserOutlined />
+              <div className="w-10 h-10 rounded-full bg-white bg-opacity-10 cursor-pointer flex justify-center items-center overflow-hidden">
+                {
+                  authUser.photoURL ?
+                    <img src={authUser.photoURL} alt={authUser.name} />
+                    :
+                    <UserOutlined />
+                }
               </div>
             </div>
             <div className="truncate text-white flex items-center">
@@ -136,11 +140,11 @@ const VersionControl = ({
           <div className="w-full px-2 text-white flex justify-evenly items-center">
             <Link to="/auth/login">
               <div className="hover:text-gray-300 border-[1px] border-gray-100 border-opacity-20 py-2 px-4 rounded cursor-pointer">
-                Login
+                Log in
               </div>
             </Link>
             <Link to="/auth/signup">
-              <div className="hover:bg-white border-[1px] border-white hover:bg-opacity-40 py-2 px-4 rounded cursor-pointer">
+              <div className="bg-white hover:bg-opacity-80 border-[1px] border-white color-application py-2 px-4 rounded cursor-pointer">
                 Sign up
               </div>
             </Link>

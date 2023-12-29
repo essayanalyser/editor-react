@@ -31,7 +31,7 @@ const User = () => {
                     (user && user.photoURL)
                     ? <img className="userProfileImg w-36 self-center" src={user.photoURL} alt='user profile img' title={user.name} />
                     : <div className="userAccordianWrapper">
-                        <AccountCircleIcon  style={{fontSize: 100}} />
+                        <AccountCircleIcon style={{fontSize: 100}} />
                     </div>
                 }
 

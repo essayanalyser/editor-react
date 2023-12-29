@@ -133,14 +133,15 @@ function App() {
   useEffect(() => {
     if (!authUser) {
       setLoading(false);
+    } else {
+      console.log(`${authUser.email} Authorised`)
     }
-    console.log("Authuser: ", authUser)
 
   }, [authUser]);
 
   const DrawerWidth = 300
 
-  const [mobileOpen, setMobileOpen] = useState(true);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -183,9 +184,11 @@ function App() {
               <AppBar
                 position="fixed"
                 sx={{
-                  width: '100%',
+                  width: '10%',
                   height: '4rem',
                   zIndex: 6,
+                  right: "auto",
+                  left: 0,
                   background: 'var(--clr-dark-bg)'
                 }}
               >

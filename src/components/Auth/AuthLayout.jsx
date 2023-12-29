@@ -36,8 +36,8 @@ const AuthLayout = () => {
 
 	return (
 		<div className='auth-container'>
-			<Link to='/'>
-				<button className='back-button'>Go back</button>
+			<Link className='back-button' to='/'>
+				<button>Go back</button>
 			</Link>
 
 			<Outlet context={[authUser]} />

@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 import { useUserAuth } from "../../../context/UserAuthContext";
 
-import GoogleButton from "react-google-button";
+import GoogleButton from "./../GoogleButton";
 
 import removeFirebasePrefix from './../../../utility/removeFirebasePrefix'
 

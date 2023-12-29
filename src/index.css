@@ -117,30 +117,5 @@ ul {
 }
 
 .color-application {
-  color: var(--clr-application-main) !important;
-}
-
-.back-button {
-  position: absolute;
-  top: 0;
-  left: 0;
-
-  margin: 1.5rem;
-  padding: 0.6em 2em;
-
-  border: none;
-  outline: none;
-
-  color: rgb(255, 255, 255);
-  background: #111;
-
-  cursor: pointer;
-
-  /* z-index: 0; */
-  border-radius: 10px;
-
-  -webkit-user-select: none;
-  user-select: none;
-
-  touch-action: manipulation;
+  color: var(--clr-dark-bg) !important;
 }

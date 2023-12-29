@@ -5,7 +5,7 @@ import { useUserAuth } from "../../../context/UserAuthContext";
 
 import removeFirebasePrefix from './../../../utility/removeFirebasePrefix'
 
-import GoogleButton from "react-google-button";
+import GoogleButton from "./../GoogleButton";
 
 function Signup() {
 	const navigate = useNavigate();
