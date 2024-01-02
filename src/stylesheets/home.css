@@ -18,8 +18,7 @@
     width: 100%;
     overflow: hidden;
 }
-.css-4t3x6l-MuiPaper-root-MuiDrawer-paper,
-.css-12i7wg6-MuiPaper-root-MuiDrawer-paper {
+.MuiDrawer-paper {
     padding: 1.5rem 1rem !important;
     background-color: var(--clr-dark-bg) !important;
 }
@@ -65,8 +64,7 @@
 }
 
 @media (max-width: 1050px) {
-    .css-14v3m06,
-    .css-lsfs9q {
+    .MuiBox2 {
         padding: 0.5rem !important;
     }
 

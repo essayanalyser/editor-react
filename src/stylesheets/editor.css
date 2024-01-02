@@ -19,11 +19,6 @@
     z-index: 1 !important;
 }
 
-.ck-editor__top {
-    height: 7% !important;
-}
-
-
 .ck-editor__main {
     height: 93% !important;
     line-height: 22px !important;

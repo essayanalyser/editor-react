@@ -184,7 +184,6 @@ function App() {
               <AppBar
                 position="fixed"
                 sx={{
-                  width: '10%',
                   height: '4rem',
                   zIndex: 6,
                   right: "auto",
@@ -240,6 +239,7 @@ function App() {
                 </Drawer>
               </Box>
               <Box
+                className = 'MuiBox2'
                 sx={{
                   flexGrow: 1,
                   p: 3,
