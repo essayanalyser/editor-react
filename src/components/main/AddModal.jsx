@@ -35,17 +35,17 @@ const AddModal = ({ setShowAddModal, setDocName, setContent }) => {
 
   return (
     <div className="fixed inset-0 z-50 bg-white backdrop-blur-sm bg-opacity-60 flex justify-center items-center p-5">
-      <div className="bg-white animate-fade-up animate-duration-[0.5s] flex flex-col w-64 gap-6 rounded-xl border-2 shadow-lg">
+      <div className="bg-white animate-fade-up animate-duration-[0.5s] flex flex-col w-1/2 gap-6 rounded-xl border-2 shadow-lg">
         <div className="relative items-center flex justify-center text-white bg-[#000842] p-5 rounded-t-xl h-full w-full">
-          <div className="text-xl text-center font-medium">Document name</div>
+          <div className="text-xl w-full font-medium">Document name</div>
         </div>
         <div className="flex flex-col px-3 pb-3 justify-center items-center gap-2">
-          <div className="text-sm font-semibold w-full">
-            Enter a document name :
+          <div className="text-sm text-gray-500 w-full">
+            Enter the title for the new document you want to create
           </div>
           <input
-            className="w-full rounded-lg outline-none text-xs border-[1px] border-gray-300 px-1 py-2"
-            placeholder="Enter your new document name"
+            className="w-full rounded-lg outline-none text-sm border-[1px] border-gray-300 px-1 py-2"
+            placeholder="Document name . . ."
             value={doc}
             onChange={(e) => setDoc(e.target.value)}
           />

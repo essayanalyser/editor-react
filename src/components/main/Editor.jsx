@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Statistics from "./Statistics";
 import Button from "../Button";
 import toast from "react-hot-toast";
@@ -90,6 +90,25 @@ const Editor = ({
     toast.success("Document Deleted Successfully!");
   };
 
+  const [showDocMenu, setShowDocMenu] = useState(false);
+  const [showVersionMenu, setShowVersionMenu] = useState("");
+
+  const menuRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setShowDocMenu(false);
+        setShowVersionMenu("");
+        setShowDocMenu(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [menuRef]);
+
   return (
     <div className="w-full ms-16 h-full mx-auto py-6 px-10 bg-gray-100 rounded-md">
       {docName && activeDoc ? (
@@ -103,10 +122,26 @@ const Editor = ({
               {activeDoc?.doc_name}
             </div>
             <div
-              className="hover:bg-gray-400 text-red-800 rounded-full cursor-pointer hover:bg-opacity-25 h-7 w-7 flex items-center justify-center text-sm mb-1"
-              onClick={() => deleteDocument(activeDoc?.doc_name)}
+              className={`hover:bg-gray-400 ${
+                showDocMenu ? "bg-gray-400 bg-opacity-25" : ""
+              } relative rounded-full cursor-pointer hover:bg-opacity-25 h-7 w-7 flex items-center justify-center text-sm mb-1`}
+              onClick={() => setShowDocMenu(!showDocMenu)}
             >
-              <Icons name="delete" width={16} height={16} />
+              <Icons name="menu" width={16} height={16} />
+              {showDocMenu && (
+                <div
+                  className="absolute rounded-lg text-xs gap-2 w-32 bg-gray-300 bg-opacity-60 backdrop-blur-sm animate-fade-up animate-duration-[0.5s] top-[110%] flex flex-col right-0 h-fit px-3 py-2"
+                  ref={menuRef}
+                >
+                  <div
+                    className="w-full h-full p-2 hover:bg-gray-100 hover:bg-opacity-50 rounded-lg transition-all duration-200 items-center justify-between flex"
+                    onClick={() => deleteDocument(activeDoc?.doc_name)}
+                  >
+                    <div>Delete</div>
+                    <Icons name="delete" width={16} height={16} />
+                  </div>
+                </div>
+              )}
             </div>
           </div>
           <div className="w-full h-[1px] my-4 rounded-full bg-gray-600 bg-opacity-25" />
@@ -122,14 +157,61 @@ const Editor = ({
                   <div className="font-bold text-sm mb-1">
                     Version {version?.version}
                   </div>
-
                   <div
-                    className="hover:bg-gray-400 rounded-full cursor-pointer hover:bg-opacity-25 h-7 w-7 flex items-center justify-center text-sm mb-1"
+                    className={`hover:bg-gray-400 ${
+                      showVersionMenu === version?.version
+                        ? "bg-gray-400 bg-opacity-25"
+                        : ""
+                    } relative rounded-full cursor-pointer hover:bg-opacity-25 h-7 w-7 flex items-center justify-center text-sm mb-1`}
                     onClick={() =>
-                      deleteVersion(activeDoc?.doc_name, version?.version)
+                      setShowVersionMenu(
+                        showVersionMenu === version?.version
+                          ? ""
+                          : version?.version
+                      )
                     }
                   >
-                    <Icons name="delete" width={16} height={16} />
+                    <Icons name="menu" width={16} height={16} />
+                    {showVersionMenu === version?.version && (
+                      <div
+                        className="absolute rounded-lg text-xs gap-2 w-32 bg-gray-300 bg-opacity-60 backdrop-blur-sm animate-fade-up animate-duration-[0.5s] top-[110%] flex flex-col right-0 h-fit px-3 py-2"
+                        ref={menuRef}
+                      >
+                        <div
+                          className="w-full h-full p-2 hover:bg-gray-100 hover:bg-opacity-50 rounded-lg transition-all duration-200 items-center justify-between flex"
+                          onClick={() => {
+                            const user = localStorage.getItem("user");
+                            navigator.clipboard.writeText(
+                              "ESSAY ANALYZER\n" +
+                                user +
+                                "\n\n" +
+                                docName +
+                                " : \n\n" +
+                                version?.content.map((contentItem) =>
+                                  contentItem?.sentences
+                                    .map((sentence) => sentence?.content)
+                                    .join(" ")
+                                ) +
+                                "\n\n" +
+                                new Date().toLocaleString()
+                            );
+                            toast.success("Copied to clipboard");
+                          }}
+                        >
+                          <div>Copy</div>
+                          <Icons name={"copy"} width={16} height={16} />
+                        </div>
+                        <div
+                          className="w-full h-full p-2 hover:bg-gray-100 hover:bg-opacity-50 rounded-lg transition-all duration-200 items-center justify-between flex"
+                          onClick={() =>
+                            deleteVersion(activeDoc?.doc_name, version?.version)
+                          }
+                        >
+                          <div>Delete</div>
+                          <Icons name={"delete"} width={16} height={16} />
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
                 <div className="bg-white border border-gray-300 p-3 rounded-md">
@@ -222,6 +304,18 @@ const Editor = ({
           </div>
         </div>
       </div>
+      <ConfirmationModal
+        showModal={showDeleteDocModal}
+        closeModal={() => setShowDeleteDocModal(false)}
+        action={() => handleDeleteDoc()}
+        message={`Are you sure you want to delete document "${selectedDocToDelete}"?`}
+      />
+      <ConfirmationModal
+        showModal={showDeleteVersionModal}
+        closeModal={() => setShowDeleteVersionModal(false)}
+        action={() => handleDeleteVersion()}
+        message={`Are you sure you want to delete version ${selectedVersionToDelete} of document "${docName}"?`}
+      />
     </div>
   );
 };
