@@ -31,9 +31,10 @@ const Editor = ({
     if (!currentDoc?.versions || currentDoc?.versions?.length === 0) {
       return "0";
     }
-    let id = Math.max(
-      currentDoc?.versions.map((version) => parseInt(version.version))
+    let id = parseInt(
+      currentDoc?.versions[currentDoc?.versions.length - 1].version
     );
+    id++;
     return id.toString();
   };
 
@@ -65,11 +66,14 @@ const Editor = ({
   const deleteVersion = (document_name, version) => {
     const user = localStorage.getItem("user");
     let v = parseInt(version);
-    axios
+    app_api
       .delete(`/users/${user}/${document_name}/${v}`)
       .then((res) => {
-        getData();
-        toast.success("Version Deleted Successfully!");
+        const doc = content.find((doc) => doc.doc_name === document_name);
+        if (doc) {
+          getData();
+          toast.success("Version Deleted Successfully!");
+        }
       })
       .catch((err) => toast.error(err.message));
   };
@@ -86,13 +90,9 @@ const Editor = ({
     toast.success("Document Deleted Successfully!");
   };
 
-  const [mouseOverDoc, setMouseOverDoc] = useState(false);
-
-  const [mouseOverVersion, setMouseOverVersion] = useState("");
-
   return (
     <div className="w-full ms-16 h-full mx-auto py-6 px-10 bg-gray-100 rounded-md">
-      {docName ? (
+      {docName && activeDoc ? (
         <>
           <div
             className="w-full items-center flex justify-center"
@@ -102,14 +102,12 @@ const Editor = ({
             <div className="font-bold w-full text-3xl">
               {activeDoc?.doc_name}
             </div>
-            {mouseOverDoc && (
-              <div
-                className="hover:bg-gray-400 rounded-full cursor-pointer hover:bg-opacity-25 h-7 w-7 flex items-center justify-center text-sm mb-1"
-                onClick={() => deleteDocument(activeDoc?.doc_name)}
-              >
-                <Icons name="delete" width={16} height={16} />
-              </div>
-            )}
+            <div
+              className="hover:bg-gray-400 text-red-800 rounded-full cursor-pointer hover:bg-opacity-25 h-7 w-7 flex items-center justify-center text-sm mb-1"
+              onClick={() => deleteDocument(activeDoc?.doc_name)}
+            >
+              <Icons name="delete" width={16} height={16} />
+            </div>
           </div>
           <div className="w-full h-[1px] my-4 rounded-full bg-gray-600 bg-opacity-25" />
           <div className="w-full h-[65%] hideScroll overflow-y-auto">
@@ -124,18 +122,15 @@ const Editor = ({
                   <div className="font-bold text-sm mb-1">
                     Version {version?.version}
                   </div>
-                  {mouseOverVersion === version?.version ? (
-                    <div
-                      className="hover:bg-gray-400 rounded-full cursor-pointer hover:bg-opacity-25 h-7 w-7 flex items-center justify-center text-sm mb-1"
-                      onClick={() =>
-                        deleteVersion(activeDoc?.doc_name, version?.version)
-                      }
-                    >
-                      <Icons name="delete" width={16} height={16} />
-                    </div>
-                  ) : (
-                    <div className="h-8 w-8"> </div>
-                  )}
+
+                  <div
+                    className="hover:bg-gray-400 rounded-full cursor-pointer hover:bg-opacity-25 h-7 w-7 flex items-center justify-center text-sm mb-1"
+                    onClick={() =>
+                      deleteVersion(activeDoc?.doc_name, version?.version)
+                    }
+                  >
+                    <Icons name="delete" width={16} height={16} />
+                  </div>
                 </div>
                 <div className="bg-white border border-gray-300 p-3 rounded-md">
                   <div className="font-bold">You: </div>
