@@ -11,7 +11,11 @@ const Breakdown = ({ item, isBreakdownVisible }) => {
     return "#9A2617";
   };
   return (
-    <div className={`breakdownWrapper ${isBreakdownVisible ? "show" : "hide"}`}>
+    <div
+      className={`breakdownWrapper animate-fade mt-2 animate-duration-[0.5s] ${
+        isBreakdownVisible ? "show" : "hide"
+      }`}
+    >
       <div className="breakdown">
         {item.sentences.map((sentence) => (
           <div

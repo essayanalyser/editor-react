@@ -116,7 +116,7 @@ const Statistics = ({ data }) => {
   return (
     <div
       id="statistics-wrapper"
-      className="bg-gray-50 rounded-lg border-[1px] border-gray-300 overflow-hidden px-3 py-6"
+      className="bg-gray-50 animate-fade-down animate-duration-[0.5s] rounded-lg border-[1px] border-gray-300 overflow-hidden px-3 py-6"
     >
       {data?.length === 0 ? (
         <div className="h-full w-full flex justify-center items-center">
@@ -222,7 +222,7 @@ const Statistics = ({ data }) => {
                 </div>
                 <div>
                   {isGraphVisible[index] && (
-                    <div className="w-full h-full flex gap-2 justify-center items-center">
+                    <div className="w-full animate-fade animate-duration-[0.5s] h-full flex gap-2 justify-center items-center">
                       <SentenceLengthChart
                         data={categorizeSentences(analyseData, index)}
                       />
@@ -271,7 +271,7 @@ const Statistics = ({ data }) => {
                               Short Sentences:
                             </th>
                             <td className="py-2 px-4 bg-grey-lightest text-xs border-b border-grey-light">
-                              <div className="bg-green-500 text-white p-1 w-7 h-7 flex items-center justify-center rounded-full">
+                              <div className="bg-[#ACE986] text-[#1A5D1A] p-1 w-7 h-7 flex items-center justify-center rounded-full">
                                 {
                                   item.sentences.filter(
                                     (sentence) =>
@@ -287,7 +287,7 @@ const Statistics = ({ data }) => {
                               Medium Sentences:
                             </th>
                             <td className="py-2 px-4 bg-grey-lightest text-xs border-b border-grey-light">
-                              <div className="bg-yellow-500 text-white p-1 w-7 h-7 flex items-center justify-center rounded-full">
+                              <div className="bg-[#FFEA79] text-[#DE8601] p-1 w-7 h-7 flex items-center justify-center rounded-full">
                                 {
                                   item.sentences.filter(
                                     (sentence) =>
@@ -306,7 +306,7 @@ const Statistics = ({ data }) => {
                               Long Sentences:
                             </th>
                             <td className="py-2 px-4 bg-grey-lightest text-xs border-b border-grey-light">
-                              <div className="bg-rose-500 text-white p-1  w-7 h-7 flex items-center justify-center rounded-full">
+                              <div className="bg-[#FFB3B3] text-[#9A2617] p-1  w-7 h-7 flex items-center justify-center rounded-full">
                                 {
                                   item.sentences.filter(
                                     (sentence) =>

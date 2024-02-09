@@ -19,7 +19,7 @@ const AuthModule = ({ setIsLoggedIn, setUser }) => {
 
   return (
     <div className="h-full w-full p-5 justify-center items-center flex">
-      <div className="w-full h-full flex flex-col justify-center items-center">
+      <div className="w-full h-full animate-fade-up animate-duration-[0.5s] flex flex-col justify-center items-center">
         {authType === "login" ? (
           <Login setAuthType={setAuthType} setUser={setUser} />
         ) : (
@@ -28,14 +28,18 @@ const AuthModule = ({ setIsLoggedIn, setUser }) => {
       </div>
       <div className="w-full flex flex-col relative h-full bg-[#000842] rounded-lg">
         <div className="w-full z-10 h-[70%]">
-          <img src={Saly} alt="Saly" className="w-full h-full object-contain" />
+          <img
+            src={Saly}
+            alt="Saly"
+            className="w-full animate-fade-up animate-duration-[0.5s] animate-delay-[0.75s] h-full object-contain"
+          />
         </div>
-        <div className="w-full h-[30%] flex justify-center items-center">
+        <div className="w-full h-[30%] animate-fade-up animate-duration-[0.5s] animate-delay-[1.25s] flex justify-center items-center">
           <div className="w-full text-white text-3xl font-bold text-center">
             Welcome to Essay Analyser
           </div>
         </div>
-        <div className="absolute w-full h-full top-0 left-0">
+        <div className="absolute animate-fade-up animate-duration-[0.5s] w-full h-full top-0 left-0">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2000 1500">
             <defs>
               <rect

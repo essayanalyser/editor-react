@@ -187,11 +187,21 @@ const Editor = ({
         </>
       ) : (
         <div className="w-full h-[75%] flex flex-col items-center justify-center bg-white rounded-lg border-gray-300  border-[1px]">
-          <img src={Saly} alt="Logo" className="h-64 -mt-10 w-fit" />
-          <div className="mt-5 font-bold text-gray-700">WELCOME TO</div>
+          <img
+            src={Saly}
+            alt="Logo"
+            className="h-64 animate-fade-up animate-duration-[0.5s] -mt-10 w-fit"
+          />
+          <div className="mt-5 font-bold text-gray-700 animate-fade-up animate-duration-[0.5s] animate-delay-[0.15s]">
+            WELCOME TO
+          </div>
           <div className="mt-2 flex flex-col items-center justify-center text-3xl font-bold">
-            <div className="text-black italic -mb-2">ESSAY</div>
-            <div className="text-[#0C21C1]">ANALYZER</div>
+            <div className="text-black animate-fade-up animate-duration-[0.5s] animate-delay-[0.3s] italic -mb-2">
+              ESSAY
+            </div>
+            <div className="text-[#0C21C1] animate-fade-up animate-duration-[0.5s] animate-delay-[0.45s]">
+              ANALYZER
+            </div>
           </div>
         </div>
       )}
