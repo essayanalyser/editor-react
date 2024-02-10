@@ -304,18 +304,6 @@ const Editor = ({
           </div>
         </div>
       </div>
-      <ConfirmationModal
-        showModal={showDeleteDocModal}
-        closeModal={() => setShowDeleteDocModal(false)}
-        action={() => handleDeleteDoc()}
-        message={`Are you sure you want to delete document "${selectedDocToDelete}"?`}
-      />
-      <ConfirmationModal
-        showModal={showDeleteVersionModal}
-        closeModal={() => setShowDeleteVersionModal(false)}
-        action={() => handleDeleteVersion()}
-        message={`Are you sure you want to delete version ${selectedVersionToDelete} of document "${docName}"?`}
-      />
     </div>
   );
 };
