@@ -147,12 +147,7 @@ const Editor = ({
           <div className="w-full h-[1px] my-4 rounded-full bg-gray-600 bg-opacity-25" />
           <div className="w-full h-[65%] hideScroll overflow-y-auto">
             {activeDoc?.versions?.map((version) => (
-              <div
-                key={version?.version}
-                className="mb-4 w-full"
-                onMouseEnter={() => setMouseOverVersion(version?.version)}
-                onMouseLeave={() => setMouseOverVersion("")}
-              >
+              <div key={version?.version} className="mb-4 w-full">
                 <div className="w-full justify-between flex items-center">
                   <div className="font-bold text-sm mb-1">
                     Version {version?.version}
