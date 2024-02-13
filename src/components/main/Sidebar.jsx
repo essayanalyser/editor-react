@@ -61,6 +61,15 @@ const Sidebar = ({
 
   const [showAddModal, setShowAddModal] = useState(false);
 
+  const [filteredContent, setFilteredContent] = useState([]);
+  const [search, setSearch] = useState("");
+
+  useEffect(() => {
+    if (content) {
+      setFilteredContent(content);
+    }
+  }, [content]);
+
   return (
     <>
       <div
@@ -93,8 +102,35 @@ const Sidebar = ({
                   <div className="text-white text-opacity-70 font-bold">
                     Documents
                   </div>
+                  <div className="w-full flex items-center px-2 bg-gray-50 bg-opacity-5  text-white rounded-lg overflow-hidden">
+                    <Icon name="search" width={14} height={14} />
+                    <input
+                      type="text"
+                      value={search}
+                      onChange={(e) => {
+                        setSearch(e.target.value);
+                        const filtered = content.filter((doc) => {
+                          return doc?.doc_name
+                            .toLowerCase()
+                            .includes(e.target.value.toLowerCase());
+                        });
+                        setFilteredContent(filtered);
+                      }}
+                      placeholder="Search document..."
+                      className="w-full h-full text-xs bg-transparent outline-none p-3"
+                    />
+                    <div
+                      onClick={() => {
+                        setSearch("");
+                        setFilteredContent(content);
+                      }}
+                      className="p-1 rounded-full hover:bg-gray-50 hover:bg-opacity-15 cursor-pointer"
+                    >
+                      <Icon name="cross" width={14} height={14} />
+                    </div>
+                  </div>
                   <div className="flex h-full hideScroll py-2 overflow-y-auto flex-col gap-2 w-full">
-                    {content?.map((doc, index) => {
+                    {filteredContent?.map((doc, index) => {
                       return (
                         <div
                           key={index}
