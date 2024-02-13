@@ -3,6 +3,7 @@ import SentenceLengthChart from "./SentenceLengthChart";
 import Breakdown from "./Breakdown";
 import Highlighter from "./Highlighter";
 import BreakdownLineChart from "./BreakdownLineChart";
+import Empty from "../../assets/presentation.gif";
 
 const Statistics = ({ data }) => {
   const calculateSentenceRhythm = (sentences) => {
@@ -16,10 +17,10 @@ const Statistics = ({ data }) => {
   };
 
   const [isBreakdownVisible, setIsBreakdownVisible] = useState(
-    data.map(() => false)
+    data?.map(() => false)
   );
 
-  const [isGraphVisible, setIsGraphVisible] = useState(data.map(() => false));
+  const [isGraphVisible, setIsGraphVisible] = useState(data?.map(() => false));
 
   const toggleBreakdownVisibility = (index) => {
     const updatedVisibility = [...isBreakdownVisible];
@@ -111,15 +112,16 @@ const Statistics = ({ data }) => {
   useEffect(() => {
     console.log(data);
     setAnalyseData(transformInput(data));
-  }, []);
+  }, [data]);
 
   return (
     <div
       id="statistics-wrapper"
-      className="bg-gray-50 animate-fade-down animate-duration-[0.5s] rounded-lg border-[1px] border-gray-300 overflow-hidden px-3 py-6"
+      className="bg-gray-50 animate-fade-down h-full w-full animate-duration-[0.5s] rounded-lg border-[1px] border-gray-300 overflow-hidden px-3 py-6"
     >
       {data?.length === 0 ? (
-        <div className="h-full w-full flex justify-center items-center">
+        <div className="h-full bg-white rounded-lg shadow-md shadow-gray-300 w-full flex flex-col gap-2 justify-center items-center">
+          <img src={Empty} alt="empty" className="w-10 h-10 " />
           <div>Empty</div>
         </div>
       ) : (

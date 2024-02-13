@@ -14,9 +14,9 @@ const SentenceLengthChart = ({ data }) => {
   }
 
   return (
-    <div className="graph">
+    <div className="w-1/2">
       <BarChart
-        width={320}
+        width={270}
         height={200}
         data={data}
         margin={{

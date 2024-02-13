@@ -3,9 +3,9 @@ import { XAxis, YAxis, Tooltip, AreaChart, Area } from "recharts";
 
 const BreakdownLineChart = ({ data }) => {
   return (
-    <div className="graph">
+    <div className="w-1/2">
       <AreaChart
-        width={320}
+        width={270}
         height={200}
         data={data}
         margin={{
