@@ -6,7 +6,7 @@ import { auth } from "../../config/Firebase";
 import toast from "react-hot-toast";
 import { signInWithEmailAndPassword } from "firebase/auth";
 
-const Login = ({ setAuthType, setUser }) => {
+const Login = ({ setAuthType, setUser, setForgotPass }) => {
   const [isActive, setIsActive] = useState("");
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
@@ -122,6 +122,16 @@ const Login = ({ setAuthType, setUser }) => {
             className="w-full overflow-hidden focus:outline-none"
             onChange={(e) => setPassword(e.target.value)}
           />
+        </div>
+      </div>
+      <div className="w-full mt-5 text-xs px-10 flex justify-end items-center">
+        <div
+          className="text-[#0C21C1] cursor-pointer hover:text-[#000842]"
+          onClick={() => {
+            setForgotPass(true);
+          }}
+        >
+          Forgot Password?
         </div>
       </div>
       <div className="px-8 w-full mt-6">

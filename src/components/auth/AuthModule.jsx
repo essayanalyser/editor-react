@@ -3,6 +3,7 @@ import Login from "./Login";
 import Register from "./Register";
 import Saly from "../../assets/Saly-10.png";
 import { useNavigate } from "react-router-dom";
+import ForgotPassword from "./ForgotPassword";
 
 const AuthModule = ({ setIsLoggedIn, setUser }) => {
   const [authType, setAuthType] = useState("login");
@@ -17,13 +18,27 @@ const AuthModule = ({ setIsLoggedIn, setUser }) => {
     }
   }, []);
 
+  const [forgotPass, setForgotPass] = useState(false);
+
   return (
     <div className="h-full w-full p-5 justify-center items-center flex">
       <div className="w-full h-full animate-fade-up animate-duration-[0.5s] flex flex-col justify-center items-center">
-        {authType === "login" ? (
-          <Login setAuthType={setAuthType} setUser={setUser} />
+        {forgotPass ? (
+          <>
+            <ForgotPassword setForgotPass={setForgotPass} />
+          </>
         ) : (
-          <Register setAuthType={setAuthType} setUser={setUser} />
+          <>
+            {authType === "login" ? (
+              <Login
+                setAuthType={setAuthType}
+                setUser={setUser}
+                setForgotPass={setForgotPass}
+              />
+            ) : (
+              <Register setAuthType={setAuthType} setUser={setUser} />
+            )}
+          </>
         )}
       </div>
       <div className="w-full flex flex-col relative h-full bg-[#000842] rounded-lg">
