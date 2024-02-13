@@ -5,6 +5,8 @@ import toast from "react-hot-toast";
 import Saly from "../../assets/Saly-10.png";
 import Icons from "../Icons";
 import app_api from "../../config/ApiConfig";
+import { CKEditor } from "@ckeditor/ckeditor5-react";
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 
 const Editor = ({
   setActiveDoc,
@@ -175,9 +177,7 @@ const Editor = ({
                   key={version?.version}
                   className="mb-4 border-b-[1px] border-gray-300 rounded-lg w-full"
                 >
-                  <div
-                    className="w-full px-2 justify-between flex items-center"
-                  >
+                  <div className="w-full px-2 justify-between flex items-center">
                     <div
                       className="font-bold w-full text-sm mb-1"
                       onClick={() => {
@@ -309,15 +309,18 @@ const Editor = ({
         </div>
       )}
       <div className="w-full py-3 h-36 flex justify-center items-center">
-        <div className="w-full bg-white h-full rounded-lg border-[1px] overflow-hidden border-gray-300 relative">
-          <textarea
-            className="w-[90%] h-full p-4 outline-none text-sm"
-            placeholder="Enter your text..."
-            rows="3"
-            value={typedData}
-            onChange={(e) => setTypedData(e.target.value)}
-            style={{ resize: "none" }}
-          />
+        <div className="w-full bg-white items-center flex h-full rounded-lg border-[1px] overflow-hidden border-gray-300 relative">
+          <div className="w-[85%] h-full overflow-y-auto">
+            <CKEditor
+              editor={ClassicEditor}
+              data={typedData}
+              config={{ toolbar: [], placeholder: "Enter your essay..." }}
+              onChange={(event, editor) => {
+                const data = editor.getData();
+                setTypedData(data);
+              }}
+            />
+          </div>
           <div className="w-[15%] px-5 absolute flex justify-center items-center right-0 top-0 h-full">
             <Button
               onClick={() => {
