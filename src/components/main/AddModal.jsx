@@ -2,7 +2,12 @@ import React, { useEffect, useState } from "react";
 import Button from "../Button";
 import toast from "react-hot-toast";
 
-const AddModal = ({ setShowAddModal, setDocName, setContent }) => {
+const AddModal = ({
+  setShowAddModal,
+  setDocName,
+  setContent,
+  setAnalysisContent,
+}) => {
   const [doc, setDoc] = useState("");
   const handleAdd = () => {
     if (doc === "") {
@@ -18,6 +23,7 @@ const AddModal = ({ setShowAddModal, setDocName, setContent }) => {
         versions: [],
       },
     ]);
+    setAnalysisContent([]);
   };
 
   useEffect(() => {

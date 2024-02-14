@@ -48,28 +48,33 @@ const MainModule = ({ setIsLoggedIn, user, setUser }) => {
     }
   }, [content, docName]);
 
-  return (
-    <div className="h-full w-full flex justify-center items-center">
-      <Sidebar
-        content={content}
-        setContent={setContent}
-        user={user}
-        setUser={setUser}
-        activeDoc={activeDoc}
-        setActiveDoc={setActiveDoc}
-        setDocName={setDocName}
-      />
-      <Editor
-        setActiveDoc={setActiveDoc}
-        setDocName={setDocName}
-        setContent={setContent}
-        activeDoc={activeDoc}
-        content={content}
-        docName={docName}
-        getData={getData}
-      />
-    </div>
-  );
+   const [analysisContent, setAnalysisContent] = useState([]);
+
+   return (
+     <div className="h-full w-full flex justify-center items-center">
+       <Sidebar
+         content={content}
+         setContent={setContent}
+         user={user}
+         setUser={setUser}
+         activeDoc={activeDoc}
+         setActiveDoc={setActiveDoc}
+         setDocName={setDocName}
+         setAnalysisContent={setAnalysisContent}
+       />
+       <Editor
+         setActiveDoc={setActiveDoc}
+         setDocName={setDocName}
+         setContent={setContent}
+         activeDoc={activeDoc}
+         content={content}
+         docName={docName}
+         getData={getData}
+         analysisContent={analysisContent}
+         setAnalysisContent={setAnalysisContent}
+       />
+     </div>
+   );
 };
 
 export default MainModule;

@@ -7,6 +7,7 @@ import Icons from "../Icons";
 import app_api from "../../config/ApiConfig";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import Box from "../../assets/box.png";
 
 const Editor = ({
   setActiveDoc,
@@ -16,6 +17,8 @@ const Editor = ({
   content,
   docName,
   getData,
+  analysisContent,
+  setAnalysisContent,
 }) => {
   useEffect(() => {
     if (docName) {
@@ -133,8 +136,6 @@ const Editor = ({
     }
   }, [activeDoc]);
 
-  const [analysisContent, setAnalysisContent] = useState([]);
-
   return (
     <div className="w-full ms-16 h-full mx-auto py-6 px-10 bg-gray-100 rounded-md">
       {docName && activeDoc ? (
@@ -168,120 +169,135 @@ const Editor = ({
           </div>
           <div className="w-full h-[1px] my-4 rounded-full bg-gray-600 bg-opacity-25" />
           <div className="w-full h-[65%] gap-3 flex">
-            <div
-              className="w-full h-full hideScroll overflow-y-auto"
-              ref={contentRef}
-            >
-              {activeDoc?.versions?.map((version) => (
+            <div className="w-full h-full shadow-md rounded-lg shadow-gray-500 p-5">
+              {activeDoc?.versions?.length > 0 ? (
                 <div
-                  key={version?.version}
-                  className="mb-4 border-b-[1px] border-gray-300 rounded-lg w-full"
+                  className="w-full h-full hideScroll overflow-y-auto"
+                  ref={contentRef}
                 >
-                  <div className="w-full px-2 justify-between flex items-center">
+                  {activeDoc?.versions?.map((version) => (
                     <div
-                      className="font-bold w-full text-sm mb-1"
-                      onClick={() => {
-                        if (visibleVersions.includes(version?.version)) {
-                          setVisibleVersions(
-                            visibleVersions.filter(
-                              (item) => item !== version?.version
-                            )
-                          );
-                          setAnalysisContent([]);
-                        } else {
-                          setVisibleVersions([
-                            ...visibleVersions,
-                            version?.version,
-                          ]);
-                          setAnalysisContent(version?.content);
-                        }
-                      }}
+                      key={version?.version}
+                      className="mb-4 border-b-[1px] border-gray-300 rounded-lg w-full"
                     >
-                      Version {version?.version}
-                    </div>
-                    <div
-                      className={`hover:bg-gray-400 ${
-                        showVersionMenu === version?.version
-                          ? "bg-gray-400 bg-opacity-25"
-                          : ""
-                      } relative rounded-full cursor-pointer hover:bg-opacity-25 h-7 w-7 flex items-center justify-center text-sm mb-1`}
-                      ref={versionRef}
-                      onClick={() => {
-                        setShowVersionMenu(
-                          showVersionMenu === version?.version
-                            ? ""
-                            : version?.version
-                        );
-                      }}
-                    >
-                      <div className="z-10">
-                        <Icons name="menu" width={16} height={16} />
-                      </div>
-                      {showVersionMenu === version?.version && (
+                      <div className="w-full px-2 justify-between flex items-center">
                         <div
-                          className="absolute z-50 rounded-lg text-xs gap-2 w-32 bg-gray-300 bg-opacity-60 backdrop-blur-sm animate-fade-up animate-duration-[0.5s] top-[110%] flex flex-col right-0 h-fit px-3 py-2"
-                          ref={versionRef}
-                        >
-                          <div
-                            className="w-full h-full p-2 hover:bg-gray-100 hover:bg-opacity-50 rounded-lg transition-all duration-200 items-center justify-between flex"
-                            onClick={() => {
-                              const user = localStorage.getItem("user");
-                              navigator.clipboard.writeText(
-                                version?.content.map((contentItem) =>
-                                  contentItem?.sentences
-                                    .map((sentence) => sentence?.content)
-                                    .join(" ")
+                          className="font-bold w-full text-sm mb-1"
+                          onClick={() => {
+                            if (visibleVersions.includes(version?.version)) {
+                              setVisibleVersions(
+                                visibleVersions.filter(
+                                  (item) => item !== version?.version
                                 )
                               );
-                              toast.success("Copied to clipboard");
-                            }}
-                          >
-                            <div>Copy</div>
-                            <Icons name={"copy"} width={16} height={16} />
-                          </div>
-                          <div
-                            className="w-full h-full p-2 hover:bg-gray-100 hover:bg-opacity-50 rounded-lg transition-all duration-200 items-center justify-between flex"
-                            onClick={() =>
-                              deleteVersion(
-                                activeDoc?.doc_name,
-                                version?.version
-                              )
+                              setAnalysisContent([]);
+                            } else {
+                              setVisibleVersions([
+                                ...visibleVersions,
+                                version?.version,
+                              ]);
+                              setAnalysisContent(version?.content);
                             }
-                          >
-                            <div>Delete</div>
-                            <Icons name={"delete"} width={16} height={16} />
+                          }}
+                        >
+                          Version {version?.version}
+                        </div>
+                        <div
+                          className={`hover:bg-gray-400 ${
+                            showVersionMenu === version?.version
+                              ? "bg-gray-400 bg-opacity-25"
+                              : ""
+                          } relative rounded-full cursor-pointer hover:bg-opacity-25 h-7 w-7 flex items-center justify-center text-sm mb-1`}
+                          ref={versionRef}
+                          onClick={() => {
+                            setShowVersionMenu(
+                              showVersionMenu === version?.version
+                                ? ""
+                                : version?.version
+                            );
+                          }}
+                        >
+                          <div className="z-10">
+                            <Icons name="menu" width={16} height={16} />
                           </div>
+                          {showVersionMenu === version?.version && (
+                            <div
+                              className="absolute z-50 rounded-lg text-xs gap-2 w-32 bg-gray-300 bg-opacity-60 backdrop-blur-sm animate-fade-up animate-duration-[0.5s] top-[110%] flex flex-col right-0 h-fit px-3 py-2"
+                              ref={versionRef}
+                            >
+                              <div
+                                className="w-full h-full p-2 hover:bg-gray-100 hover:bg-opacity-50 rounded-lg transition-all duration-200 items-center justify-between flex"
+                                onClick={() => {
+                                  const user = localStorage.getItem("user");
+                                  navigator.clipboard.writeText(
+                                    version?.content.map((contentItem) =>
+                                      contentItem?.sentences
+                                        .map((sentence) => sentence?.content)
+                                        .join(" ")
+                                    )
+                                  );
+                                  toast.success("Copied to clipboard");
+                                }}
+                              >
+                                <div>Copy</div>
+                                <Icons name={"copy"} width={16} height={16} />
+                              </div>
+                              <div
+                                className="w-full h-full p-2 hover:bg-gray-100 hover:bg-opacity-50 rounded-lg transition-all duration-200 items-center justify-between flex"
+                                onClick={() =>
+                                  deleteVersion(
+                                    activeDoc?.doc_name,
+                                    version?.version
+                                  )
+                                }
+                              >
+                                <div>Delete</div>
+                                <Icons name={"delete"} width={16} height={16} />
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                      {visibleVersions.includes(version?.version) && (
+                        <div className="bg-white border border-gray-300 p-3 rounded-md">
+                          <div className="font-bold">You: </div>
+                          {version?.content?.map((contentItem, index) => (
+                            <div key={index} className="flex h-full w-full">
+                              <div className="flex flex-col h-full w-full">
+                                {contentItem?.sentences?.map(
+                                  (sentence) =>
+                                    sentence?.content.length > 0 &&
+                                    sentence?.content !== " " &&
+                                    sentence?.content !== "" &&
+                                    sentence?.content !== "." && (
+                                      <div
+                                        key={sentence?.sentence_id}
+                                        className="mb-1 text-sm"
+                                      >
+                                        {sentence?.content}
+                                      </div>
+                                    )
+                                )}
+                              </div>
+                            </div>
+                          ))}
                         </div>
                       )}
                     </div>
-                  </div>
-                  {visibleVersions.includes(version?.version) && (
-                    <div className="bg-white border border-gray-300 p-3 rounded-md">
-                      <div className="font-bold">You: </div>
-                      {version?.content?.map((contentItem, index) => (
-                        <div key={index} className="flex h-full w-full">
-                          <div className="flex flex-col h-full w-full">
-                            {contentItem?.sentences?.map(
-                              (sentence) =>
-                                sentence?.content.length > 0 &&
-                                sentence?.content !== " " &&
-                                sentence?.content !== "" &&
-                                sentence?.content !== "." && (
-                                  <div
-                                    key={sentence?.sentence_id}
-                                    className="mb-1 text-sm"
-                                  >
-                                    {sentence?.content}
-                                  </div>
-                                )
-                            )}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
+                  ))}
                 </div>
-              ))}
+              ) : (
+                <div className="w-full h-full gap-2 flex flex-col items-center justify-center">
+                  <img
+                    src={Box}
+                    alt="empty"
+                    className="w-24 h-24 object-cover"
+                  />
+                  <div className="text-gray-600 font-semibold italic text-sm">
+                    No versions available
+                  </div>
+                </div>
+              )}
             </div>
             <div className="w-full overflow-y-auto hideScroll h-full p-3">
               <Statistics data={analysisContent} />

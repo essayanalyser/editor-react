@@ -122,7 +122,10 @@ const Statistics = ({ data }) => {
       {data?.length === 0 ? (
         <div className="h-full bg-white rounded-lg shadow-md shadow-gray-300 w-full flex flex-col gap-2 justify-center items-center">
           <img src={Empty} alt="empty" className="w-10 h-10 " />
-          <div>Empty</div>
+          <div>
+            Select <span className="text-[#0084FF] italic">version</span> to
+            analyze
+          </div>
         </div>
       ) : (
         <div className="w-full overflow-y-auto h-full hideScroll">

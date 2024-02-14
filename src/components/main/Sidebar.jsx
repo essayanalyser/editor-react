@@ -15,6 +15,7 @@ const Sidebar = ({
   activeDoc,
   setActiveDoc,
   setDocName,
+  setAnalysisContent,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const sidebarRef = useRef(null);
@@ -191,6 +192,7 @@ const Sidebar = ({
           setShowAddModal={setShowAddModal}
           setDocName={setDocName}
           setContent={setContent}
+          setAnalysisContent={setAnalysisContent}
         />
       )}
     </>
