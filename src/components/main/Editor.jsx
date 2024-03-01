@@ -348,7 +348,7 @@ const Editor = ({
           </div>
         </div>
       )}
-      <div className="w-full py-3 h-44 flex justify-center items-center">
+      <div className="w-full py-3 h-40 flex justify-center items-center">
         <div className="w-full bg-white items-center flex h-full rounded-lg border-[1px] overflow-hidden border-gray-300 relative shadow-inner shadow-gray-300">
           <div className="w-[85%] h-full overflow-y-auto">
             <CKEditor
