@@ -4,16 +4,15 @@ import Breakdown from "./Breakdown";
 import Highlighter from "./Highlighter";
 import BreakdownLineChart from "./BreakdownLineChart";
 import Empty from "../../assets/presentation.gif";
+import { Tooltip } from "react-tooltip";
+import "react-tooltip/dist/react-tooltip.css";
 
-const Statistics = ({ data }) => {
-  const calculateSentenceRhythm = (sentences) => {
-    const rhythm = sentences?.map((sentence) => {
-      const wordsCount = sentence.split(/\s+/).length;
-      if (wordsCount <= 5) return "S";
-      if (wordsCount <= 18) return "M";
-      return "L";
-    });
-    return rhythm.join(",");
+const Statistics = ({ data, prevData }) => {
+  const calculateSentenceRhythm = (sentence) => {
+    const wordsCount = sentence.split(/\s+/).length;
+    if (wordsCount <= 5) return "S";
+    if (wordsCount <= 18) return "M";
+    return "L";
   };
 
   const [isBreakdownVisible, setIsBreakdownVisible] = useState(
@@ -51,8 +50,8 @@ const Statistics = ({ data }) => {
     ];
 
     function categorizeSentence(sentence) {
-      const words = sentence.split(" ");
-      const wordCount = words.length;
+      const words = sentence?.split(" ");
+      const wordCount = words?.length;
 
       if (wordCount <= 5) {
         return "SHORT";
@@ -63,10 +62,10 @@ const Statistics = ({ data }) => {
       }
     }
 
-    input[index].sentences.forEach((sentence) => {
-      const category = categorizeSentence(sentence.sentence);
-      sentencedata.forEach((item) => {
-        if (item.type === category) {
+    input[index]?.sentences?.forEach((sentence) => {
+      const category = categorizeSentence(sentence?.sentence);
+      sentencedata?.forEach((item) => {
+        if (item?.type === category) {
           item.count++;
         }
       });
@@ -75,9 +74,11 @@ const Statistics = ({ data }) => {
   }
   function calculateWordCounts(input, index) {
     const breakdowndata = [];
-    input[index].sentences.forEach((sentence, index) => {
-      const words = sentence.sentence.split(" ").filter((word) => word !== ""); // Split sentence into words and remove empty strings
-      breakdowndata.push({ id: index + 1, length: words.length });
+    input[index]?.sentences?.forEach((sentence, index) => {
+      const words = sentence?.sentence
+        ?.split(" ")
+        .filter((word) => word !== ""); // Split sentence into words and remove empty strings
+      breakdowndata.push({ id: index + 1, length: words?.length });
     });
     return breakdowndata;
   }
@@ -108,11 +109,12 @@ const Statistics = ({ data }) => {
   }
 
   const [analyseData, setAnalyseData] = useState([]);
+  const [prevAnalyseData, setPrevAnalyseData] = useState([]);
 
   useEffect(() => {
-    console.log(data);
     setAnalyseData(transformInput(data));
-  }, [data]);
+    setPrevAnalyseData(transformInput(prevData));
+  }, [data, prevData]);
 
   return (
     <div
@@ -230,103 +232,223 @@ const Statistics = ({ data }) => {
                     <div className="w-full animate-fade animate-duration-[0.5s] h-full flex gap-2 justify-center items-center">
                       <SentenceLengthChart
                         data={categorizeSentences(analyseData, index)}
+                        prevData={categorizeSentences(prevAnalyseData, index)}
                       />
                       <BreakdownLineChart
                         data={calculateWordCounts(analyseData, index)}
+                        prevData={calculateWordCounts(prevAnalyseData, index)}
                       />
                     </div>
                   )}
                 </div>
               </div>
-              <table className="w-full text-left border-collapse">
-                <tbody>
-                  <tr className="border-b">
-                    <th className="py-4 px-6 bg-grey-lightest font-bold uppercase text-sm text-grey-dark border-b border-grey-light">
+              <div className="w-full text-left">
+                <div className="border-b flex py-4 px-6">
+                  <div className="w-full px-1 flex items-center gap-2">
+                    <div className="w-32 uppercase text-sm text-grey-dark">
                       Breakdown:
-                    </th>
-                    <td className="py-4 px-10 font-bold bg-grey-lightest text-sm border-b border-grey-light">
+                    </div>
+                    <div className="text-sm w-64 break-words">
                       {item.sentences
-                        .map(
-                          (sentence) => sentence.sentence.split(/\s+/).length
-                        )
-                        .join(", ")}
-                    </td>
-                  </tr>
+                        .map((sentence, index) => {
+                          const length = sentence.sentence.split(/\s+/).length;
+                          let classname;
+                          if (length <= 5) {
+                            classname =
+                              "bg-gradient-to-b from-[#a3ff6a] to-[#649b64]";
+                          } else if (length <= 18) {
+                            classname =
+                              "bg-gradient-to-b from-[#f2d374] to-[#efac48]";
+                          } else {
+                            classname =
+                              "bg-gradient-to-b from-[#ff6868] to-[#9A2617]";
+                          }
+                          return (
+                            <span
+                              key={index}
+                              className={`bg-clip-text text-transparent font-semibold ${classname} uppercase`}
+                            >
+                              {length}
+                            </span>
+                          );
+                        })
+                        .reduce((prev, curr, i) => {
+                          return i === 0 ? [curr] : [...prev, ", ", curr];
+                        }, [])}
+                    </div>
+                  </div>
+                  <div
+                    className="h-full w-fit p-1 items-center text-gray-400 flex justify-center"
+                    data-tooltip-id="breakdown-tooltip"
+                    data-tooltip-content="Breakdown is the sequence of word count of the sentences in this paragraph"
+                    data-tooltip-place="top"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      fill="currentColor"
+                      className="bi bi-info-circle"
+                      viewBox="0 0 16 16"
+                    >
+                      <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
+                      <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0" />
+                    </svg>
+                    <Tooltip
+                      id="breakdown-tooltip"
+                      style={{
+                        width: "300px",
+                        fontSize: "14px",
+                        wordBreak: "break-word",
+                        textAlign: "justify",
+                      }}
+                    />
+                  </div>
+                </div>
 
-                  <tr className="border-b">
-                    <th className="py-4 px-6 bg-grey-lightest font-bold uppercase text-sm text-grey-dark border-b border-grey-light">
+                <div className="border-b flex py-4 px-6">
+                  <div className="w-full px-1 flex items-center gap-2">
+                    <div className="w-32 uppercase text-sm text-grey-dark">
                       Rhythm:
-                    </th>
-                    <td className="py-4 px-10 font-bold bg-grey-lightest text-sm border-b border-grey-light">
-                      {calculateSentenceRhythm(
-                        item.sentences.map((sentence) => sentence.sentence)
-                      )}
-                    </td>
-                  </tr>
-
-                  <tr className="border-b">
-                    <th className="py-4 px-6 bg-grey-lightest font-bold uppercase text-sm text-grey-dark border-b border-grey-light">
+                    </div>
+                    <div className="w-64 text-sm break-words">
+                      {item.sentences
+                        .map((sentence, index) => {
+                          const d = calculateSentenceRhythm(sentence.sentence);
+                          let classname;
+                          if (d === "S") {
+                            classname =
+                              "bg-gradient-to-b from-[#a3ff6a] to-[#649b64]";
+                          } else if (d === "M") {
+                            classname =
+                              "bg-gradient-to-b from-[#f2d374] to-[#efac48]";
+                          } else {
+                            classname =
+                              "bg-gradient-to-b from-[#ff6868] to-[#9A2617]";
+                          }
+                          return (
+                            <span
+                              key={index}
+                              className={`bg-clip-text text-transparent font-semibold ${classname} uppercase`}
+                            >
+                              {d}
+                            </span>
+                          );
+                        })
+                        .reduce((prev, curr, i) => {
+                          return i === 0 ? [curr] : [...prev, ", ", curr];
+                        }, [])}
+                    </div>
+                  </div>
+                  <div
+                    className="h-full w-fit p-1 items-center text-gray-400 flex justify-center"
+                    data-tooltip-id="rhythm-tooltip"
+                    data-tooltip-content="
+                    Rhythm is the sequence of sentence type in this paragraph.
+                    "
+                    data-tooltip-place="top"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      fill="currentColor"
+                      className="bi bi-info-circle"
+                      viewBox="0 0 16 16"
+                    >
+                      <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
+                      <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0" />
+                    </svg>
+                    <Tooltip
+                      id="rhythm-tooltip"
+                      style={{
+                        width: "300px",
+                        fontSize: "14px",
+                        wordBreak: "break-word",
+                        textAlign: "justify",
+                      }}
+                    />
+                  </div>
+                </div>
+                <div className="border-b flex items-center py-4 px-6 bg-grey-lightest">
+                  <div className="w-full px-1 flex items-center">
+                    <div className="w-32 uppercase text-sm text-grey-dark">
                       Statistics:
-                    </th>
-                    <td className="py-4 px-6 bg-grey-lightest text-sm border-b border-grey-light">
-                      <table className="w-full text-left border-collapse">
-                        <tbody>
-                          <tr className="border-b">
-                            <th className="py-2 px-4 bg-grey-lightest font-bold uppercase text-xs text-grey-dark border-b border-grey-light">
-                              Short Sentences:
-                            </th>
-                            <td className="py-2 px-4 bg-grey-lightest text-xs border-b border-grey-light">
-                              <div className="bg-[#ACE986] text-[#1A5D1A] p-1 w-7 h-7 flex items-center justify-center rounded-full">
-                                {
-                                  item.sentences.filter(
-                                    (sentence) =>
-                                      sentence.sentence.split(/\s+/).length <= 5
-                                  ).length
-                                }
-                              </div>
-                            </td>
-                          </tr>
-
-                          <tr className="border-b">
-                            <th className="py-2 px-4 bg-grey-lightest font-bold uppercase text-xs text-grey-dark border-b border-grey-light">
-                              Medium Sentences:
-                            </th>
-                            <td className="py-2 px-4 bg-grey-lightest text-xs border-b border-grey-light">
-                              <div className="bg-[#FFEA79] text-[#DE8601] p-1 w-7 h-7 flex items-center justify-center rounded-full">
-                                {
-                                  item.sentences.filter(
-                                    (sentence) =>
-                                      sentence.sentence.split(/\s+/).length >
-                                        5 &&
-                                      sentence.sentence.split(/\s+/).length <=
-                                        18
-                                  ).length
-                                }
-                              </div>
-                            </td>
-                          </tr>
-
-                          <tr className="border-b">
-                            <th className="py-2 px-4 bg-grey-lightest font-bold uppercase text-xs text-grey-dark border-b border-grey-light">
-                              Long Sentences:
-                            </th>
-                            <td className="py-2 px-4 bg-grey-lightest text-xs border-b border-grey-light">
-                              <div className="bg-[#FFB3B3] text-[#9A2617] p-1  w-7 h-7 flex items-center justify-center rounded-full">
-                                {
-                                  item.sentences.filter(
-                                    (sentence) =>
-                                      sentence.sentence.split(/\s+/).length > 18
-                                  ).length
-                                }
-                              </div>
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+                    </div>
+                    <div className="text-sm w-64">
+                      <div className="border-b flex py-2 px-4 items-center">
+                        <div className="font-bold bg-gradient-to-b from-[#a3ff6a] to-[#649b64] bg-clip-text text-transparent uppercase text-xs text-grey-dark">
+                          Short Sentences:
+                        </div>
+                        <div className="bg-[#a3ff6a] text-[#1A5D1A] p-1 w-7 h-7 flex items-center justify-center rounded-full ml-auto">
+                          {
+                            item.sentences.filter(
+                              (sentence) =>
+                                sentence.sentence.split(/\s+/).length <= 5
+                            ).length
+                          }
+                        </div>
+                      </div>
+                      <div className="border-b flex py-2 px-4 items-center">
+                        <div className="font-bold bg-gradient-to-b from-[#f2d374] to-[#efac48] bg-clip-text text-transparent uppercase text-xs text-grey-dark">
+                          Medium Sentences:
+                        </div>
+                        <div className="bg-[#f2d374] text-[#DE8601] p-1 w-7 h-7 flex items-center justify-center rounded-full ml-auto">
+                          {
+                            item.sentences.filter(
+                              (sentence) =>
+                                sentence.sentence.split(/\s+/).length > 5 &&
+                                sentence.sentence.split(/\s+/).length <= 18
+                            ).length
+                          }
+                        </div>
+                      </div>
+                      <div className="border-b flex py-2 px-4 items-center">
+                        <div className="font-bold bg-gradient-to-b from-[#ff6868] to-[#9A2617] bg-clip-text text-transparent uppercase text-xs text-grey-dark">
+                          Long Sentences:
+                        </div>
+                        <div className="bg-[#ff6868] text-[#9A2617] p-1 w-7 h-7 flex items-center justify-center rounded-full ml-auto">
+                          {
+                            item.sentences.filter(
+                              (sentence) =>
+                                sentence.sentence.split(/\s+/).length > 18
+                            ).length
+                          }
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    className="h-full w-fit p-1 items-center text-gray-400 flex justify-center"
+                    data-tooltip-id="statistics-tooltip"
+                    data-tooltip-content="
+                    Statistics is the count of Short (1-5 words), Medium (5-18 words) and Long (>18 words) sentences in this paragraph.
+                    "
+                    data-tooltip-place="top"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      fill="currentColor"
+                      className="bi bi-info-circle"
+                      viewBox="0 0 16 16"
+                    >
+                      <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
+                      <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0" />
+                    </svg>
+                    <Tooltip
+                      id="statistics-tooltip"
+                      style={{
+                        width: "300px",
+                        fontSize: "14px",
+                        wordBreak: "break-word",
+                        textAlign: "justify",
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
           ))}
         </div>

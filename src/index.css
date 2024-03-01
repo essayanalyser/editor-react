@@ -3,20 +3,30 @@
 @tailwind components;
 @tailwind utilities;
 
-.hideScroll::-webkit-scrollbar {
-  display: none;
+::-webkit-scrollbar {
+    width: 5px;
 }
 
-/* Hide scrollbar for IE, Edge and Firefox */
-.hideScroll {
-  -ms-overflow-style: none;
-  /* IE and Edge */
-  scrollbar-width: none;
-  /* Firefox */
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #44DDA080; 
+    border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: #d5d5d560; 
 }
 
 .ck.ck-content {
-  height: 7rem;
-  border: 0;
+  height: 150px;
   font-size: small;
+  border: 0 !important;
+  box-shadow: none !important;
+  background: transparent !important;
 }

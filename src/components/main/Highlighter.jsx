@@ -26,7 +26,7 @@ const Highlighter = ({ item }) => {
           }}
         >
           {" "}
-          {sentence.sentence}.
+          {sentence.sentence}
         </span>
       ))}
     </div>

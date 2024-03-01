@@ -48,33 +48,36 @@ const MainModule = ({ setIsLoggedIn, user, setUser }) => {
     }
   }, [content, docName]);
 
-   const [analysisContent, setAnalysisContent] = useState([]);
+  const [analysisContent, setAnalysisContent] = useState([]);
+  const [prevAnalysisContent, setPrevAnalysisContent] = useState([]);
 
-   return (
-     <div className="h-full w-full flex justify-center items-center">
-       <Sidebar
-         content={content}
-         setContent={setContent}
-         user={user}
-         setUser={setUser}
-         activeDoc={activeDoc}
-         setActiveDoc={setActiveDoc}
-         setDocName={setDocName}
-         setAnalysisContent={setAnalysisContent}
-       />
-       <Editor
-         setActiveDoc={setActiveDoc}
-         setDocName={setDocName}
-         setContent={setContent}
-         activeDoc={activeDoc}
-         content={content}
-         docName={docName}
-         getData={getData}
-         analysisContent={analysisContent}
-         setAnalysisContent={setAnalysisContent}
-       />
-     </div>
-   );
+  return (
+    <div className="h-full w-full flex justify-center items-center">
+      <Sidebar
+        content={content}
+        setContent={setContent}
+        user={user}
+        setUser={setUser}
+        activeDoc={activeDoc}
+        setActiveDoc={setActiveDoc}
+        setDocName={setDocName}
+        setAnalysisContent={setAnalysisContent}
+      />
+      <Editor
+        setActiveDoc={setActiveDoc}
+        setDocName={setDocName}
+        setContent={setContent}
+        activeDoc={activeDoc}
+        content={content}
+        docName={docName}
+        getData={getData}
+        analysisContent={analysisContent}
+        setAnalysisContent={setAnalysisContent}
+        prevAnalysisContent={prevAnalysisContent}
+        setPrevAnalysisContent={setPrevAnalysisContent}
+      />
+    </div>
+  );
 };
 
 export default MainModule;

@@ -99,7 +99,7 @@ const Sidebar = ({
             {isOpen && (
               <>
                 <div className="w-[90%] h-[1px] rounded-full bg-white bg-opacity-20" />
-                <div className="flex h-full hideScroll py-5 overflow-y-auto flex-col gap-2 w-full">
+                <div className="flex h-full overflow-x-hidden py-5 overflow-y-auto flex-col gap-2 w-full">
                   <div className="text-white text-opacity-70 font-bold">
                     Documents
                   </div>

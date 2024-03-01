@@ -1,24 +1,56 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip } from "recharts";
 
-const SentenceLengthChart = ({ data }) => {
+const SentenceLengthChart = ({ data, prevData }) => {
   const colorMap = {
     LONG: "#FFB3B3",
     MEDIUM: "#FFEA79",
     SHORT: "#ACE986",
   };
 
-  for (const entry of data) {
+  const combinedData = data.map((item, index) => ({
+    ...item,
+    prevCount: prevData[index] && prevData[index].count,
+  }));
+
+  for (const entry of combinedData) {
     const color = colorMap[entry.type];
     entry.fill = `url(#color${color})`;
   }
+
+  const CustomTooltip = ({ active, payload, label }) => {
+    if (active && payload && payload?.length) {
+      return (
+        <div className="bg-white rounded-lg shadow-md shadow-gray-400 p-2">
+          <p className="text-xs font-semibold">
+            Type{" "}
+            <span
+              className={`text-sm font-bold ${
+                label === "LONG"
+                  ? "text-[#FFB3B3]"
+                  : label === "MEDIUM"
+                  ? "text-[#FFEA79]"
+                  : "text-[#ACE986]"
+              }`}
+            >{`${label}`}</span>
+          </p>
+          <p className="text-xs text-[#8884d8]">{`Current Count = ${payload[0]?.value}`}</p>
+          {payload?.[1] && (
+            <p className="text-xs text-[#82ca9d]">{`Previous Count = ${payload[1]?.value}`}</p>
+          )}
+        </div>
+      );
+    }
+
+    return null;
+  };
 
   return (
     <div className="w-1/2">
       <BarChart
         width={270}
         height={200}
-        data={data}
+        data={combinedData}
         margin={{
           top: 15,
           right: 25,
@@ -41,35 +73,11 @@ const SentenceLengthChart = ({ data }) => {
             </linearGradient>
           ))}
         </defs>
-        <XAxis
-          label={{
-            value: "Sentence Type",
-            position: "insideBottom",
-            offset: -10,
-            fontSize: "10px",
-          }}
-          dataKey="type"
-          tickLine={false}
-          style={{ fontSize: "10px" }}
-        />
-        <YAxis
-          label={{
-            value: "Count",
-            angle: -90,
-            position: "insideMiddle",
-            offset: -10,
-            fontSize: "10px",
-          }}
-          tickLine={false}
-          style={{ fontSize: "10px" }}
-        />
-        <Tooltip labelFormatter={(label) => `Type: ${label}`} />
-        <Bar
-          dataKey="count"
-          fill="url(#colorRevenue)"
-          fillOpacity={1}
-          type="monotone"
-        />
+        <XAxis tick={{ fontSize: 10 }} dataKey="type" tickLine={false} />
+        <YAxis tick={{ fontSize: 10 }} tickLine={false} />
+        <Tooltip content={<CustomTooltip />} />
+        <Bar dataKey="count" fill="url(#colorData)" />
+        <Bar dataKey="prevCount" fill="url(#colorPrevData)" />
       </BarChart>
     </div>
   );

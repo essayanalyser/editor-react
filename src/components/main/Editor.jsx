@@ -19,6 +19,8 @@ const Editor = ({
   getData,
   analysisContent,
   setAnalysisContent,
+  prevAnalysisContent,
+  setPrevAnalysisContent,
 }) => {
   useEffect(() => {
     if (docName) {
@@ -197,6 +199,25 @@ const Editor = ({
                                 version?.version,
                               ]);
                               setAnalysisContent(version?.content);
+                              const currentDoc = content.find(
+                                (doc) => doc.doc_name === docName
+                              );
+                              const currentVersionIndex =
+                                currentDoc?.versions.findIndex(
+                                  (v) =>
+                                    parseInt(v.version) ===
+                                    parseInt(version?.version)
+                                );
+
+                              const prevVersion =
+                                currentVersionIndex > 0
+                                  ? currentDoc?.versions[
+                                      currentVersionIndex - 1
+                                    ]
+                                  : null;
+                              if (prevVersion) {
+                                setPrevAnalysisContent(prevVersion?.content);
+                              }
                             }
                           }}
                         >
@@ -228,7 +249,6 @@ const Editor = ({
                               <div
                                 className="w-full h-full p-2 hover:bg-gray-100 hover:bg-opacity-50 rounded-lg transition-all duration-200 items-center justify-between flex"
                                 onClick={() => {
-                                  const user = localStorage.getItem("user");
                                   navigator.clipboard.writeText(
                                     version?.content.map((contentItem) =>
                                       contentItem?.sentences
@@ -263,22 +283,23 @@ const Editor = ({
                           <div className="font-bold">You: </div>
                           {version?.content?.map((contentItem, index) => (
                             <div key={index} className="flex h-full w-full">
-                              <div className="flex flex-col h-full w-full">
+                              <p className="h-full w-full">
                                 {contentItem?.sentences?.map(
-                                  (sentence) =>
+                                  (sentence, index) =>
                                     sentence?.content.length > 0 &&
                                     sentence?.content !== " " &&
                                     sentence?.content !== "" &&
                                     sentence?.content !== "." && (
-                                      <div
+                                      <span
                                         key={sentence?.sentence_id}
                                         className="mb-1 text-sm"
                                       >
+                                        {index !== 0 && <span> </span>}
                                         {sentence?.content}
-                                      </div>
+                                      </span>
                                     )
                                 )}
-                              </div>
+                              </p>
                             </div>
                           ))}
                         </div>
@@ -299,8 +320,11 @@ const Editor = ({
                 </div>
               )}
             </div>
-            <div className="w-full overflow-y-auto hideScroll h-full p-3">
-              <Statistics data={analysisContent} />
+            <div className="w-full overflow-y-auto hideScroll h-full p-3 shadow-md rounded-lg shadow-gray-500">
+              <Statistics
+                data={analysisContent}
+                prevData={prevAnalysisContent}
+              />
             </div>
           </div>
         </>
@@ -324,8 +348,8 @@ const Editor = ({
           </div>
         </div>
       )}
-      <div className="w-full py-3 h-36 flex justify-center items-center">
-        <div className="w-full bg-white items-center flex h-full rounded-lg border-[1px] overflow-hidden border-gray-300 relative">
+      <div className="w-full py-3 h-44 flex justify-center items-center">
+        <div className="w-full bg-white items-center flex h-full rounded-lg border-[1px] overflow-hidden border-gray-300 relative shadow-inner shadow-gray-300">
           <div className="w-[85%] h-full overflow-y-auto">
             <CKEditor
               editor={ClassicEditor}
