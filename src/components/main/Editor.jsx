@@ -117,10 +117,6 @@ const Editor = ({
   const [visibleVersions, setVisibleVersions] = useState([]);
 
   useEffect(() => {
-    console.log(showVersionMenu);
-  }, [showVersionMenu]);
-
-  useEffect(() => {
     const handleClickOutside = (event) => {
       if (versionRef.current && !versionRef.current.contains(event.target)) {
         setShowVersionMenu("");
