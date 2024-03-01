@@ -143,7 +143,7 @@ const Editor = ({
       {docName && activeDoc ? (
         <>
           <div className="w-full items-center flex justify-center">
-            <div className="font-bold w-full text-3xl">
+            <div className="font-bold w-full text-3xl h-9">
               {activeDoc?.doc_name}
             </div>
             <div
