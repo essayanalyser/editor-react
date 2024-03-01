@@ -36,7 +36,6 @@ const Register = ({ setAuthType, setUser }) => {
             localStorage.setItem("token", token);
           })
           .then(async () => {
-            console.log("User: ", email);
             await app_api
               .post(`/api/users/`, {
                 title: email,
@@ -50,33 +49,8 @@ const Register = ({ setAuthType, setUser }) => {
                 navigate("/main");
               })
               .catch((e) => {
-                console.log(e);
                 toast.error("Something went wrong");
               });
-            //  fetch("https://jayneet639.pythonanywhere.com/api/users", {
-            //    method: "POST",
-            //    headers: {
-            //      mode: "no-cors",
-            //      "Content-Type": "application/json",
-            //      "Access-Control-Allow-Origin": "true",
-            //    },
-            //    body: JSON.stringify({
-            //      title: email,
-            //      version: "0",
-            //      content: "Hey there!",
-            //    }),
-            //  })
-            //    .then((response) => response.json())
-            //    .then((data) => {
-            //      setUser(email);
-            //      localStorage.setItem("user", email);
-            //      toast.success("Registered successfully");
-            //      navigate("/main");
-            //    })
-            //    .catch((e) => {
-            //      console.log(e);
-            //      toast.error("Something went wrong");
-            //    });
           });
       })
       .catch((error) => {
