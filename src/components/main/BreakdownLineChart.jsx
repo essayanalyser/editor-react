@@ -27,9 +27,9 @@ const BreakdownLineChart = ({ data, prevData }) => {
   };
 
   return (
-    <div className="w-1/2">
+    <div>
       <AreaChart
-        width={270}
+        width={250}
         height={200}
         data={combinedData}
         margin={{
