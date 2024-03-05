@@ -1,3 +1,10 @@
+# Offical URL of the site -
+https://essayanalyzer.netlify.app/
+# How to run it locally-
+- Clone the repo.
+- Install modules using the command: `npm i`.
+- Start the project using: `npm run dev`.
+
 # React + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
