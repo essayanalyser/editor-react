@@ -1,10 +1,9 @@
 # Offical URL of the site -
 https://essayanalyzer.netlify.app/
 # How to run it locally-
-Clone the repo.
-Install modules using the command - npm I
-start the project using -npm run dev
-
+- Clone the repo.
+- Install modules using the command: `npm i`.
+- Start the project using: `npm run dev`.
 
 # React + Vite
 
