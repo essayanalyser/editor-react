@@ -150,7 +150,7 @@ const Editor = ({
       {docName && activeDoc ? (
         <>
           <div className="w-full items-center flex justify-center">
-            <div className="font-bold w-full text-3xl h-8">
+            <div className="font-bold w-full text-2xl h-7">
               {activeDoc?.doc_name}
             </div>
             <div
@@ -176,7 +176,7 @@ const Editor = ({
               )}
             </div>
           </div>
-          <div className="w-full h-[1px] my-4 rounded-full bg-gray-600 bg-opacity-25" />
+          <div className="w-full h-[1px] my-3 rounded-full bg-gray-600 bg-opacity-25" />
           <div className="w-full h-[65%] gap-3 flex">
             <div className="w-full h-full shadow-md rounded-lg shadow-gray-500 p-5">
               {activeDoc?.versions?.length > 0 ? (

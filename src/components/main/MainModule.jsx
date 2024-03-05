@@ -28,7 +28,6 @@ const MainModule = ({ setIsLoggedIn, user, setUser, setLoading }) => {
         let historyuser = localStorage.getItem("user");
         await app_api.get(`/users/${historyuser}`).then((res) => {
           setContent(res.data);
-          toast.success("Data fetched successfully");
         });
       }
     } else {
