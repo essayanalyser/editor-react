@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 import Editor from "./Editor";
 import app_api from "../../config/ApiConfig";
 
-const MainModule = ({ setIsLoggedIn, user, setUser }) => {
+const MainModule = ({ setIsLoggedIn, user, setUser, setLoading }) => {
   const navigate = useNavigate();
   useEffect(() => {
     if (localStorage.getItem("token")) {
@@ -21,6 +21,7 @@ const MainModule = ({ setIsLoggedIn, user, setUser }) => {
   const [docName, setDocName] = useState("");
 
   const getData = async () => {
+    setLoading(true);
     if (!user) {
       if (localStorage.getItem("user")) {
         setUser(localStorage.getItem("user"));
@@ -33,9 +34,9 @@ const MainModule = ({ setIsLoggedIn, user, setUser }) => {
     } else {
       await app_api.get(`/users/${user}`).then((res) => {
         setContent(res.data);
-        toast.success("Data fetched successfully");
       });
     }
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -62,6 +63,7 @@ const MainModule = ({ setIsLoggedIn, user, setUser }) => {
         setActiveDoc={setActiveDoc}
         setDocName={setDocName}
         setAnalysisContent={setAnalysisContent}
+        setLoading={setLoading}
       />
       <Editor
         setActiveDoc={setActiveDoc}
@@ -75,6 +77,7 @@ const MainModule = ({ setIsLoggedIn, user, setUser }) => {
         setAnalysisContent={setAnalysisContent}
         prevAnalysisContent={prevAnalysisContent}
         setPrevAnalysisContent={setPrevAnalysisContent}
+        setLoading={setLoading}
       />
     </div>
   );

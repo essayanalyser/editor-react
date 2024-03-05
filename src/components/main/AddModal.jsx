@@ -7,9 +7,11 @@ const AddModal = ({
   setDocName,
   setContent,
   setAnalysisContent,
+  setLoading,
 }) => {
   const [doc, setDoc] = useState("");
   const handleAdd = () => {
+    setLoading(true);
     if (doc === "") {
       toast.error("Please enter a document name");
       return;
@@ -24,6 +26,7 @@ const AddModal = ({
       },
     ]);
     setAnalysisContent([]);
+    setLoading(false);
   };
 
   useEffect(() => {

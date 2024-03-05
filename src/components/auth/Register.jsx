@@ -7,7 +7,7 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import toast from "react-hot-toast";
 import app_api from "../../config/ApiConfig";
 
-const Register = ({ setAuthType, setUser }) => {
+const Register = ({ setAuthType, setUser, setLoading }) => {
   const [isActive, setIsActive] = useState("");
   const nameRef = useRef(null);
   const emailRef = useRef(null);
@@ -21,10 +21,13 @@ const Register = ({ setAuthType, setUser }) => {
   const [rePassword, setRePassword] = useState("");
 
   const handleRegister = () => {
+    setLoading(true);
     if (!name || !email || !password || !rePassword) {
+      setLoading(false);
       return toast.error("Please fill all the fields");
     }
     if (password !== rePassword) {
+      setLoading(false);
       return toast.error("Passwords do not match");
     }
     createUserWithEmailAndPassword(auth, email, password)
@@ -55,6 +58,9 @@ const Register = ({ setAuthType, setUser }) => {
       })
       .catch((error) => {
         toast.error("Something went wrong");
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
 

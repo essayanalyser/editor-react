@@ -21,6 +21,7 @@ const Editor = ({
   setAnalysisContent,
   prevAnalysisContent,
   setPrevAnalysisContent,
+  setLoading,
 }) => {
   useEffect(() => {
     if (docName) {
@@ -44,6 +45,7 @@ const Editor = ({
   };
 
   const handleAnalyseButtonClicked = async () => {
+    setLoading(true);
     if (docName === "") {
       toast.error("Please enter a document name");
     } else {
@@ -66,9 +68,11 @@ const Editor = ({
           toast.error("Error saving data", error);
         });
     }
+    setLoading(false);
   };
 
-  const deleteVersion = (document_name, version) => {
+  const deleteVersion = (document_name, version, mode) => {
+    setLoading(true);
     const user = localStorage.getItem("user");
     let v = parseInt(version);
     app_api
@@ -77,22 +81,29 @@ const Editor = ({
         const doc = content.find((doc) => doc.doc_name === document_name);
         if (doc) {
           getData();
-          toast.success("Version Deleted Successfully!");
+          if (mode === "deleteVersion") {
+            toast.success("Version Deleted Successfully!");
+          }
         }
       })
-      .catch((err) => toast.error(err.message));
+      .catch((err) => toast.error(err.message))
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   const deleteDocument = (document_name) => {
+    setLoading(true);
     const user = localStorage.getItem("user");
     const doc = content.find((doc) => doc.doc_name === document_name);
     doc.versions.forEach((version) => {
-      deleteVersion(document_name, version.version);
+      deleteVersion(document_name, version.version, "deleteDocument");
     });
     setContent(content.filter((doc) => doc.doc_name !== document_name));
     setDocName("");
     setActiveDoc([]);
     toast.success("Document Deleted Successfully!");
+    setLoading(false);
   };
 
   const [showDocMenu, setShowDocMenu] = useState(false);
@@ -263,7 +274,8 @@ const Editor = ({
                                 onClick={() =>
                                   deleteVersion(
                                     activeDoc?.doc_name,
-                                    version?.version
+                                    version?.version,
+                                    "deleteVersion"
                                   )
                                 }
                               >

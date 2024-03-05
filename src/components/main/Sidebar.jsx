@@ -16,6 +16,7 @@ const Sidebar = ({
   setActiveDoc,
   setDocName,
   setAnalysisContent,
+  setLoading,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const sidebarRef = useRef(null);
@@ -23,6 +24,7 @@ const Sidebar = ({
   const navigate = useNavigate();
 
   const handleSignOut = () => {
+    setLoading(true);
     signOut(auth)
       .then(() => {
         localStorage.removeItem("user");
@@ -35,6 +37,9 @@ const Sidebar = ({
       })
       .catch((error) => {
         toast.error("Couldn't log out");
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
 
@@ -193,6 +198,7 @@ const Sidebar = ({
           setDocName={setDocName}
           setContent={setContent}
           setAnalysisContent={setAnalysisContent}
+          setLoading={setLoading}
         />
       )}
     </>

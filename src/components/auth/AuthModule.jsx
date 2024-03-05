@@ -5,7 +5,7 @@ import Saly from "../../assets/Saly-10.png";
 import { useNavigate } from "react-router-dom";
 import ForgotPassword from "./ForgotPassword";
 
-const AuthModule = ({ setIsLoggedIn, setUser }) => {
+const AuthModule = ({ setIsLoggedIn, setUser, setLoading }) => {
   const [authType, setAuthType] = useState("login");
   const navigate = useNavigate();
 
@@ -34,9 +34,14 @@ const AuthModule = ({ setIsLoggedIn, setUser }) => {
                 setAuthType={setAuthType}
                 setUser={setUser}
                 setForgotPass={setForgotPass}
+                setLoading={setLoading}
               />
             ) : (
-              <Register setAuthType={setAuthType} setUser={setUser} />
+              <Register
+                setAuthType={setAuthType}
+                setUser={setUser}
+                setLoading={setLoading}
+              />
             )}
           </>
         )}

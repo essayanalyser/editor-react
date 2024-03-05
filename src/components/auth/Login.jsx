@@ -6,7 +6,7 @@ import { auth } from "../../config/Firebase";
 import toast from "react-hot-toast";
 import { signInWithEmailAndPassword } from "firebase/auth";
 
-const Login = ({ setAuthType, setUser, setForgotPass }) => {
+const Login = ({ setAuthType, setUser, setForgotPass, setLoading }) => {
   const [isActive, setIsActive] = useState("");
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
@@ -35,7 +35,9 @@ const Login = ({ setAuthType, setUser, setForgotPass }) => {
   }, [emailRef, passwordRef, setIsActive]);
 
   const handleLogin = async () => {
+    setLoading(true);
     if (!email || !password) {
+      setLoading(false);
       return toast.error("Please fill all the fields");
     }
     signInWithEmailAndPassword(auth, email, password)
@@ -51,6 +53,9 @@ const Login = ({ setAuthType, setUser, setForgotPass }) => {
       })
       .catch(() => {
         toast.error("Something went wrong");
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
 
