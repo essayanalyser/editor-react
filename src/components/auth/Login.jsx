@@ -4,7 +4,11 @@ import Button from "../Button";
 import { useNavigate } from "react-router-dom";
 import { auth } from "../../config/Firebase";
 import toast from "react-hot-toast";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import {
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  GoogleAuthProvider,
+} from "firebase/auth";
 
 const Login = ({ setAuthType, setUser, setForgotPass, setLoading }) => {
   const [isActive, setIsActive] = useState("");
@@ -56,6 +60,23 @@ const Login = ({ setAuthType, setUser, setForgotPass, setLoading }) => {
       })
       .finally(() => {
         setLoading(false);
+      });
+  };
+
+  const signInWithGoogle = () => {
+    const provider = new GoogleAuthProvider();
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        const user = result.user;
+        setUser(user.email);
+        localStorage.setItem("user", user.email);
+        user.getIdToken().then((token) => {
+          localStorage.setItem("token", token);
+          navigate("/main");
+        });
+      })
+      .catch((error) => {
+        toast.error("Something went wrong");
       });
   };
 
@@ -142,6 +163,22 @@ const Login = ({ setAuthType, setUser, setForgotPass, setLoading }) => {
       <div className="px-8 w-full mt-6">
         <Button icon={"login"} onClick={() => handleLogin()}>
           Login
+        </Button>
+      </div>
+      <div class="inline-flex items-center justify-center w-full">
+        <hr class="w-64 h-px my-8 bg-gray-200 border-0 dark:bg-gray-500" />
+        <span class="absolute px-3 font-medium text-gray-500 -translate-x-1/2 bg-white left-1/2">
+          or
+        </span>
+      </div>
+      <div className="px-8 w-full flex flex-col gap-2">
+        <Button
+          onClick={() => {
+            signInWithGoogle();
+          }}
+          icon={"google"}
+        >
+          Continue with Google
         </Button>
       </div>
     </div>

@@ -87,6 +87,22 @@ const Register = ({ setAuthType, setUser, setLoading }) => {
     };
   }, [emailRef, passwordRef, nameRef, rePasswordRef, setIsActive]);
 
+  const signInWithGoogle = () => {
+    const provider = new GoogleAuthProvider();
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        const user = result.user;
+        setUser(user.email);
+        localStorage.setItem("user", user.email);
+        user.getIdToken().then((token) => {
+          localStorage.setItem("token", token);
+          navigate("/main");
+        });
+      })
+      .catch((error) => {
+        toast.error("Something went wrong");
+      });
+  };
   return (
     <div className="h-full w-full flex px-8 flex-col justify-center items-center">
       <div className="w-full px-8 text-2xl font-bold">Sign Up</div>
@@ -214,6 +230,22 @@ const Register = ({ setAuthType, setUser, setLoading }) => {
       <div className="px-8 w-full mt-6">
         <Button icon={"login"} onClick={() => handleRegister()}>
           Register
+        </Button>
+      </div>
+      <div class="inline-flex items-center justify-center w-full">
+        <hr class="w-64 h-px my-8 bg-gray-200 border-0 dark:bg-gray-500" />
+        <span class="absolute px-3 font-medium text-gray-500 -translate-x-1/2 bg-white left-1/2">
+          or
+        </span>
+      </div>
+      <div className="px-8 w-full flex flex-col gap-2">
+        <Button
+          onClick={() => {
+            signInWithGoogle();
+          }}
+          icon={"google"}
+        >
+          Continue with Google
         </Button>
       </div>
     </div>
