@@ -68,11 +68,10 @@ const Login = ({ setAuthType, setUser, setForgotPass, setLoading }) => {
     const provider = new GoogleAuthProvider();
     signInWithPopup(auth, provider).then(async (result) => {
       const user = result?.user;
-      console.log(user.email);
       const creationTime = result?.user?.metadata?.creationTime;
       const currentTime = new Date().toISOString();
       const timeDifference = Math.abs(
-        new Date(creationTime) - new Date(currentTime)
+        new Date(currentTime) - new Date(creationTime)
       );
       const secondsDifference = Math.floor(timeDifference / 1000);
       if (secondsDifference <= 5) {

@@ -33,7 +33,6 @@ const Editor = ({
 
   const getNewVersionID = () => {
     const currentDoc = activeDoc;
-    console.log(currentDoc?.versions);
     if (!currentDoc?.versions || currentDoc?.versions?.length === 0) {
       return "0";
     }

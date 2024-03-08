@@ -87,27 +87,42 @@ const Register = ({ setAuthType, setUser, setLoading }) => {
     };
   }, [emailRef, passwordRef, nameRef, rePasswordRef, setIsActive]);
 
-  const signInWithGoogle = () => {
-    const provider = new GoogleAuthProvider();
-    signInWithPopup(auth, provider).then(async (result) => {
-      const user = result.user;
-      await app_api
-        .post(`/api/users/`, {
-          title: user.email,
-          version: "0",
-          content: "Hey there!",
-        })
-        .then(() => {
-          setUser(email);
-          localStorage.setItem("user", email);
-          toast.success("Registered successfully");
-          navigate("/main");
-        })
-        .catch((e) => {
-          toast.error("Something went wrong");
-        });
-    });
-  };
+   const signInWithGoogle = () => {
+     const provider = new GoogleAuthProvider();
+     signInWithPopup(auth, provider).then(async (result) => {
+       const user = result?.user;
+       const creationTime = result?.user?.metadata?.creationTime;
+       const currentTime = new Date().toISOString();
+       const timeDifference = Math.abs(
+         new Date(currentTime) - new Date(creationTime)
+       );
+       const secondsDifference = Math.floor(timeDifference / 1000);
+       if (secondsDifference <= 5) {
+         await app_api
+           .post(`/api/users/`, {
+             title: user.email,
+             version: "0",
+             content: "Hey there!",
+           })
+           .then(() => {
+             setUser(user.email);
+             localStorage.setItem("user", user.email);
+             localStorage.setItem("token", user.accessToken);
+             toast.success("Registered successfully");
+             navigate("/main");
+           })
+           .catch((e) => {
+             toast.error("Something went wrong");
+           });
+       } else {
+         setUser(user.email);
+         localStorage.setItem("user", user.email);
+         localStorage.setItem("token", user.accessToken);
+         toast.success("Logged in successfully");
+         navigate("/main");
+       }
+     });
+   };
   return (
     <div className="h-full w-full flex px-8 flex-col justify-center items-center">
       <div className="w-full px-8 text-2xl font-bold">Sign Up</div>
