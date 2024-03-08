@@ -89,19 +89,24 @@ const Register = ({ setAuthType, setUser, setLoading }) => {
 
   const signInWithGoogle = () => {
     const provider = new GoogleAuthProvider();
-    signInWithPopup(auth, provider)
-      .then((result) => {
-        const user = result.user;
-        setUser(user.email);
-        localStorage.setItem("user", user.email);
-        user.getIdToken().then((token) => {
-          localStorage.setItem("token", token);
+    signInWithPopup(auth, provider).then(async (result) => {
+      const user = result.user;
+      await app_api
+        .post(`/api/users/`, {
+          title: user.email,
+          version: "0",
+          content: "Hey there!",
+        })
+        .then(() => {
+          setUser(email);
+          localStorage.setItem("user", email);
+          toast.success("Registered successfully");
           navigate("/main");
+        })
+        .catch((e) => {
+          toast.error("Something went wrong");
         });
-      })
-      .catch((error) => {
-        toast.error("Something went wrong");
-      });
+    });
   };
   return (
     <div className="h-full w-full flex px-8 flex-col justify-center items-center">
@@ -232,9 +237,9 @@ const Register = ({ setAuthType, setUser, setLoading }) => {
           Register
         </Button>
       </div>
-      <div class="inline-flex items-center justify-center w-full">
-        <hr class="w-64 h-px my-8 bg-gray-200 border-0 dark:bg-gray-500" />
-        <span class="absolute px-3 font-medium text-gray-500 -translate-x-1/2 bg-white left-1/2">
+      <div className="inline-flex items-center justify-center w-full">
+        <hr className="w-64 h-px my-8 bg-gray-200 border-0 dark:bg-gray-500" />
+        <span className="absolute px-3 font-medium text-gray-500 -translate-x-1/2 bg-white left-1/2">
           or
         </span>
       </div>

@@ -9,6 +9,7 @@ import {
   signInWithPopup,
   GoogleAuthProvider,
 } from "firebase/auth";
+import app_api from "../../config/ApiConfig";
 
 const Login = ({ setAuthType, setUser, setForgotPass, setLoading }) => {
   const [isActive, setIsActive] = useState("");
@@ -65,19 +66,40 @@ const Login = ({ setAuthType, setUser, setForgotPass, setLoading }) => {
 
   const signInWithGoogle = () => {
     const provider = new GoogleAuthProvider();
-    signInWithPopup(auth, provider)
-      .then((result) => {
-        const user = result.user;
+    signInWithPopup(auth, provider).then(async (result) => {
+      const user = result?.user;
+      console.log(user.email);
+      const creationTime = result?.user?.metadata?.creationTime;
+      const currentTime = new Date().toISOString();
+      const timeDifference = Math.abs(
+        new Date(creationTime) - new Date(currentTime)
+      );
+      const secondsDifference = Math.floor(timeDifference / 1000);
+      if (secondsDifference <= 5) {
+        await app_api
+          .post(`/api/users/`, {
+            title: user.email,
+            version: "0",
+            content: "Hey there!",
+          })
+          .then(() => {
+            setUser(user.email);
+            localStorage.setItem("user", user.email);
+            localStorage.setItem("token", user.accessToken);
+            toast.success("Registered successfully");
+            navigate("/main");
+          })
+          .catch((e) => {
+            toast.error("Something went wrong");
+          });
+      } else {
         setUser(user.email);
         localStorage.setItem("user", user.email);
-        user.getIdToken().then((token) => {
-          localStorage.setItem("token", token);
-          navigate("/main");
-        });
-      })
-      .catch((error) => {
-        toast.error("Something went wrong");
-      });
+        localStorage.setItem("token", user.accessToken);
+        toast.success("Logged in successfully");
+        navigate("/main");
+      }
+    });
   };
 
   return (
@@ -165,9 +187,9 @@ const Login = ({ setAuthType, setUser, setForgotPass, setLoading }) => {
           Login
         </Button>
       </div>
-      <div class="inline-flex items-center justify-center w-full">
-        <hr class="w-64 h-px my-8 bg-gray-200 border-0 dark:bg-gray-500" />
-        <span class="absolute px-3 font-medium text-gray-500 -translate-x-1/2 bg-white left-1/2">
+      <div className="inline-flex items-center justify-center w-full">
+        <hr className="w-64 h-px my-8 bg-gray-200 border-0 dark:bg-gray-500" />
+        <span className="absolute px-3 font-medium text-gray-500 -translate-x-1/2 bg-white left-1/2">
           or
         </span>
       </div>

@@ -26,6 +26,7 @@ const MainModule = ({ setIsLoggedIn, user, setUser, setLoading }) => {
       if (localStorage.getItem("user")) {
         setUser(localStorage.getItem("user"));
         let historyuser = localStorage.getItem("user");
+        console.log(historyuser);
         await app_api.get(`/users/${historyuser}`).then((res) => {
           setContent(res.data);
         });
