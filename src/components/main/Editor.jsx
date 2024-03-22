@@ -302,7 +302,7 @@ const Editor = ({
                                         className="mb-1 text-sm"
                                       >
                                         {index !== 0 && <span> </span>}
-                                        {sentence?.content}
+                                        {sentence?.content}.
                                       </span>
                                     )
                                 )}
