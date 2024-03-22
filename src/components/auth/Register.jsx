@@ -3,7 +3,7 @@ import Icons from "../Icons";
 import Button from "../Button";
 import { auth } from "../../config/Firebase";
 import { useNavigate } from "react-router-dom";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { GoogleAuthProvider, createUserWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import toast from "react-hot-toast";
 import app_api from "../../config/ApiConfig";
 

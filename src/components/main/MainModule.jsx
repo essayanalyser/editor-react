@@ -22,19 +22,15 @@ const MainModule = ({ setIsLoggedIn, user, setUser, setLoading }) => {
 
   const getData = async () => {
     setLoading(true);
-    if (!user) {
-      if (localStorage.getItem("user")) {
-        setUser(localStorage.getItem("user"));
-        let historyuser = localStorage.getItem("user");
-        await app_api.get(`/users/${historyuser}`).then((res) => {
-          setContent(res.data);
-        });
-      }
-    } else {
-      await app_api.get(`/users/${user}`).then((res) => {
+
+    const historyUser = user || localStorage.getItem("user") || undefined
+    
+    if(!!historyUser) {
+      await app_api.get(`/users/${historyUser}`).then((res) => {
         setContent(res.data);
       });
     }
+    
     setLoading(false);
   };
 
